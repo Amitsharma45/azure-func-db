@@ -7,12 +7,14 @@ class TaskRepository {
     db = {};
 
     constructor() {
-        this.db = connect();
-        console.log("db connected success")
-        // For Development
-        /*this.db.sequelize.sync({ force: true }).then(() => {
-            console.log("Drop and re-sync db.");
-        });*/
+        try {
+            this.db = connect();
+            console.log("db connected successfully");
+        } catch (error) {
+            console.log("Error connecting to the database:", error);
+            // You can choose to throw the error or handle it according to your application's needs
+            throw error; // Throwing the error to propagate it upwards
+        }
     }
 
     async getTasks() {
@@ -35,7 +37,7 @@ class TaskRepository {
             data = await this.db.tasks.create(task);
         } catch(err) {
             // logger.error('Error::' + err);
-            console.log(err);
+            // context.log(err);
             console.log("-----error----38")
         }
         return data;

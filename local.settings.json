@@ -1,0 +1,17 @@
+{
+  "IsEncrypted": false,
+  "Values": {
+    "AzureWebJobsStorage": "UseDevelopmentStorage=true",
+    "FUNCTIONS_WORKER_RUNTIME": "node",
+    "AzureWebJobsFeatureFlags": "EnableWorkerIndexing",
+    "MYSQL_USER": "adminOnelab",
+    "MYSQL_HOST": "onelabdbserver.database.windows.net",
+    "MYSQL_PASSWORD": "Onelab0504#",
+    "MYSQL_DATABASE": "onlabtestingdb",
+    "MYSQL_DIALECT": "mysql"
+  },
+  "ConnectionStrings": {},
+  "Host": {
+    "CORS": "*"
+  }
+}

@@ -18,6 +18,7 @@ class TaskRepository {
     async getTasks() {
         
         try {
+            console.log("-----task.repository.js----")
             const tasks = await this.db.tasks.findAll();
             console.log('tasks:::', tasks);
             return tasks;

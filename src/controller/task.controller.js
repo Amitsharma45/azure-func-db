@@ -10,6 +10,7 @@ class TodoController {
 
     async createTask(task) {
         // logger.info('Controller: createTask', task);
+        console.log("-----controller----")
         return await taskService.createTask(task);
     }
 

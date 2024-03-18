@@ -1,8 +1,10 @@
 const { app } = require('@azure/functions');
 const taskController = require("../controller/task.controller");
+
 // const express = require('express');
 // app.use(express.json());
 // app.use(express.urlencoded({ extended: true }));
+
 app.http('updateTask', {
     methods: ['POST'],
     authLevel: 'anonymous',

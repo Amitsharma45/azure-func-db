@@ -5,6 +5,7 @@ app.http("login", {
   authLevel: "anonymous",
   handler: async (req, context) => {
     try {
+      
       const jwtSecretKey = "sdsfsg";
       const expiresIn = "7d";
   

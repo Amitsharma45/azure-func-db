@@ -10,9 +10,9 @@ app.http('createTasks', {
         if (req.body) {
             const body = await req.json();
             const task = body;
-            console.log("------task----", task)
+            context.log("------task----", task)
             const res = await taskController.createTask(task);
-            console.log("------res----done----")
+            context.log("------res----done----")
             return context.res = {
                 status: 200,
                 body: JSON.stringify(res),

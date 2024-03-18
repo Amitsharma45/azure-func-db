@@ -10,7 +10,7 @@ class TaskService {
 
     async createTask(task,context) {
         context.log("-----service----")
-        return await taskRepository.createTask(task);
+        return await taskRepository.createTask(task,context);
     }
 
     async updateTask(task) {

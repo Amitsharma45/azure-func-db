@@ -7,26 +7,18 @@ class TaskRepository {
     db = {};
 
     constructor() {
-        try {
-            this.db = connect();
-            console.log("db connected successfully");
-        } catch (error) {
-            console.log("Error connecting to the database:", error);
-            // You can choose to throw the error or handle it according to your application's needs
-            throw error; // Throwing the error to propagate it upwards
-        }
+        this.db = connect();
+        console.log("db connected success")
     }
 
     async getTasks() {
         
         try {
-            
             const tasks = await this.db.tasks.findAll();
             console.log('tasks:::', tasks);
             return tasks;
         } catch (err) {
             console.log(err);
-            return [];
         }
     }
 
@@ -38,7 +30,8 @@ class TaskRepository {
         } catch(err) {
             // logger.error('Error::' + err);
             // context.log(err);
-            console.log("-----error----38")
+            console.log("-----error----38");
+            return err;
         }
         return data;
     }

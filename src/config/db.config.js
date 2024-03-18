@@ -24,12 +24,16 @@ const connect = () => {
         options: {
             encrypt: true
         },
+        dialectOptions: {
+            encrypt: true
+        },
         pool: {
             max: 10,
             min: 0,
             acquire: 20000,
             idle: 5000
-        }
+        },
+        port:1433
     });
 
     const db = {};

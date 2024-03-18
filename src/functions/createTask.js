@@ -10,7 +10,7 @@ app.http('createTasks', {
         if (req.body) {
             const body = await req.json();
             const task = body;
-            context.log("------task----", task)
+            context.log("------task----", task) 
             const res = await taskController.createTask(task,context);
             context.log("------res----done----")
             return context.res = {

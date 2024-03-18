@@ -8,10 +8,10 @@ class TodoController {
         return await taskService.getTasks();
     }
 
-    async createTask(task) {
+    async createTask(task,context) {
         // logger.info('Controller: createTask', task);
-        console.log("-----controller----")
-        return await taskService.createTask(task);
+        context.log("-----controller----")
+        return await taskService.createTask(task,context);
     }
 
     async updateTask(task) {

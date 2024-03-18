@@ -8,8 +8,8 @@ class TaskService {
         return await taskRepository.getTasks();
     }
 
-    async createTask(task) {
-        console.log("-----service----")
+    async createTask(task,context) {
+        context.log("-----service----")
         return await taskRepository.createTask(task);
     }
 

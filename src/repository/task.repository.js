@@ -18,7 +18,7 @@ class TaskRepository {
     async getTasks() {
         
         try {
-            console.log("-----task.repository.js----")
+            
             const tasks = await this.db.tasks.findAll();
             console.log('tasks:::', tasks);
             return tasks;
@@ -28,9 +28,10 @@ class TaskRepository {
         }
     }
 
-    async createTask(task) {
+    async createTask(task,context) {
         let data = {};
         try {
+            context.log("-----task.repository.js----",task)
             data = await this.db.tasks.create(task);
         } catch(err) {
             // logger.error('Error::' + err);

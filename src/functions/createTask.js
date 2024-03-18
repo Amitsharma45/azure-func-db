@@ -11,7 +11,7 @@ app.http('createTasks', {
             const body = await req.json();
             const task = body;
             context.log("------task----", task)
-            const res = await taskController.createTask(task);
+            const res = await taskController.createTask(task,context);
             context.log("------res----done----")
             return context.res = {
                 status: 200,

@@ -31,7 +31,7 @@ const connect = () => {
   const db = {};
   db.Sequelize = Sequelize;
   db.sequelize = sequelize;
-  db.tasks = require("../model/task.model")(sequelize, DataTypes, Model);
+  //   db.tasks = require("../model/task.model")(sequelize, DataTypes, Model);
 
   return db;
 };

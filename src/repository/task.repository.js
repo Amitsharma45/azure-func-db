@@ -19,6 +19,7 @@ class TaskRepository {
             return tasks;
         } catch (err) {
             console.log(err);
+            return err;
         }
     }
 

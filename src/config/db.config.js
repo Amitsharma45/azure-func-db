@@ -22,7 +22,8 @@ const connect = () => {
         dialect: dialect,
         operatorsAliases: false,
         options: {
-            encrypt: true
+            encrypt: true, // For Azure SQL Database
+            trustServerCertificate: true // For Azure SQL Database
         },
         dialectOptions: {
             encrypt: true

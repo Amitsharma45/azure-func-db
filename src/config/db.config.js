@@ -1,17 +1,13 @@
 const { Sequelize, Model, DataTypes } = require("sequelize");
+const db = {};
 
-const connect = () => {
+const initializeConnection = () => {
+
   const hostName = "127.0.0.1";
   const userName = "root";
   const password = "Amit@2001";
   const database = "symphome_development";
   const dialect = "mysql";
-
-  // const hostName = "onelabdbserver.database.windows.net";
-  // const userName = "adminOnelab";
-  // const password = "Onelab0504#";
-  // const database = "onlabtestingdb";
-  // const dialect = "mysql";
 
   const sequelize = new Sequelize(database, userName, password, {
     host: hostName,
@@ -27,15 +23,21 @@ const connect = () => {
       idle: 5000,
     },
   });
-
-  const db = {};
+  
   db.Sequelize = Sequelize;
   db.sequelize = sequelize;
-  //   db.tasks = require("../model/task.model")(sequelize, DataTypes, Model);
-
+  db.tasks = require("../model/task.model")(sequelize, DataTypes, Model);
+  db.users = require("../model/user.model")(sequelize, DataTypes, Model);
   return db;
 };
 
+
+function getConnection() {
+  console.log("-----getting connection-----");
+  return db;
+}
+
 module.exports = {
-  connect,
+  initializeConnection,
+  getConnection
 };

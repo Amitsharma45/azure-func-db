@@ -10,7 +10,14 @@ module.exports = (sequelize, DataTypes, Model) => {
         primaryKey: true,
         type: DataTypes.INTEGER,
       },
-      username: {
+      firstName: {
+        type: DataTypes.STRING,
+        allowNull: false,
+      },
+      lastName: {
+        type: DataTypes.STRING,
+      },
+      email: {
         type: DataTypes.STRING,
         allowNull: false,
       },
@@ -18,15 +25,6 @@ module.exports = (sequelize, DataTypes, Model) => {
         type: DataTypes.STRING,
         allowNull: false, // Assuming password is always required
         comment: "Hashed password",
-      },
-      first_name: {
-        type: DataTypes.STRING,
-      },
-      last_name: {
-        type: DataTypes.STRING,
-      },
-      email: {
-        type: DataTypes.STRING,
       },
       access_level: {
         type: DataTypes.STRING,
@@ -39,20 +37,12 @@ module.exports = (sequelize, DataTypes, Model) => {
       updatedAt: {
         type: DataTypes.DATE,
         allowNull: false,
-        defaultValue: DataTypes.NOW,
       },
     },
     {
       sequelize, // We need to pass the connection instance
-      modelName: "User", // We need to choose the model name
+      modelName: "users", // We need to choose the model name
       tableName: "users", // Optional: Specify the table name
-      timestamps: true,
-      updatedAt: "updatedAt", // Specify the name of the updatedAt field
-      hooks: {
-        beforeUpdate: (user, options) => {
-          user.updatedAt = new Date(); // Update updatedAt to current datetime
-        },
-      },
     }
   );
 

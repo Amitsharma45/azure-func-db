@@ -3,19 +3,19 @@ const db = {};
 
 const initializeConnection = async () => {
 
-  const hostName = process.env.hostName ;
-  const userName = process.env.userName;
-  const password = process.env.password;
-  const database = process.env.database;
+  // const hostName = process.env.hostName ;
+  // const userName = process.env.userName;
+  // const password = process.env.password;
+  // const database = process.env.database;
   
   const sequelize = new Sequelize(
-    database,
-    userName,
-    password,
+    'onlabtestingdb',
+    'adminOnelab',
+    'Onelab0504#',
     {
-      host: hostName,
+      host: 'onelabdbserver.database.windows.net',
       port: 1433,
-      dialect: "mssql",
+      dialect: 'mssql'
     }
   );
   try {

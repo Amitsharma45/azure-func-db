@@ -8,6 +8,7 @@ const initializeConnection = async () => {
   // const password = process.env.password;
   // const database = process.env.database;
   
+  
   const sequelize = new Sequelize(
     'onlabtestingdb',
     'adminOnelab',

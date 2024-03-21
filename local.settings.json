@@ -3,15 +3,11 @@
   "Values": {
     "FUNCTIONS_WORKER_RUNTIME": "node",
     "AzureWebJobsStorage": "UseDevelopmentStorage=true",
-    "db_server": "onelabdbserver.database.windows.net",
-    "db_database": "onlabtestingdb",
-    "db_user": "adminOnelab",
-    "db_password": "Onelab0504#$%TRONGpa44w0rd!"
-  },
-  "ConnectionStrings": {},
-  "Host": {
-    "CORS": "*"
+    "JWT_SECRET_KEY": "mySecretKey",
+    "hostName": "onelabdbserver.database.windows.net",
+    "userName": "adminOnelab",
+    "password": "Onelab0504#",
+    "database": "onlabtestingdb",
+    "port": "1443"
   }
 }
-
-    

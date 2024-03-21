@@ -1,39 +1,41 @@
 const { Sequelize, Model, DataTypes } = require("sequelize");
 const db = {};
 
-const initializeConnection = () => {
+const initializeConnection = async () => {
 
-  const hostName = "127.0.0.1";
-  const userName = "root";
-  const password = "Amit@2001";
-  const database = "symphome_development";
-  const dialect = "mysql";
-
-  const sequelize = new Sequelize(database, userName, password, {
-    host: hostName,
-    dialect: dialect,
-    operatorsAliases: false,
-    options: {
-      encrypt: true,
-    },
-    pool: {
-      max: 10,
-      min: 0,
-      acquire: 20000,
-      idle: 5000,
-    },
-  });
+  const hostName = process.env.hostName ;
+  const userName = process.env.userName;
+  const password = process.env.password;
+  const database = process.env.database;
+  
+  const sequelize = new Sequelize(
+    database,
+    userName,
+    password,
+    {
+      host: hostName,
+      port: 1433,
+      dialect: "mssql",
+    }
+  );
+  try {
+    await sequelize.authenticate();
+    console.log("Connection has been established successfully.");
+  } catch (error) {
+    console.error("Unable to connect to the database:", error);
+  }
   
   db.Sequelize = Sequelize;
   db.sequelize = sequelize;
-  db.tasks = require("../model/task.model")(sequelize, DataTypes, Model);
+  
+  // models
   db.users = require("../model/user.model")(sequelize, DataTypes, Model);
+
   return db;
 };
 
 
 function getConnection() {
-  console.log("-----getting connection-----");
   return db;
 }
 

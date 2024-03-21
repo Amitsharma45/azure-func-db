@@ -24,19 +24,19 @@ module.exports = (sequelize, DataTypes, Model) => {
       password: {
         type: DataTypes.STRING,
         allowNull: false, // Assuming password is always required
-        comment: "Hashed password",
       },
-      access_level: {
+      accessLevel: {
         type: DataTypes.STRING,
-        comment: "User access level: Teacher/Student",
       },
       createdAt: {
         type: DataTypes.DATE,
         allowNull: false,
+        defaultValue: sequelize.literal('GETDATE()')
       },
       updatedAt: {
         type: DataTypes.DATE,
         allowNull: false,
+        defaultValue: sequelize.literal('GETDATE()')
       },
     },
     {

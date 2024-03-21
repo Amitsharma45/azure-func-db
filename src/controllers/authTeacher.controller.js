@@ -1,7 +1,7 @@
 const authService = require("../services/authTeacher.service");
 const bcrypt = require("bcryptjs");
 const { generateAccessToken } = require("../utils/generateToken");
-
+const { Authenticate} = require("../utils/verifyToken");
 // Sign-Up controller to create a new user
 const signUp = async (request, context) => {
   try {
@@ -93,8 +93,21 @@ const getProfile = async (request, context) => {
         },
       });
     }
-    // const token = request;
-    // console.log("-----token----", token);
+    
+    const data = await Authenticate(request);
+    console.log('------------------------', data);
+    if (data.status !== 200) {
+      return (context.res = {
+        status: 401,
+        jsonBody: {
+          status: 401,
+          message: "Unauthorized",
+        },
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+    }
 
     // get user by id
     const user = await authService.getUserById(id);
@@ -105,7 +118,8 @@ const getProfile = async (request, context) => {
         status: 404,
         jsonBody: {
           status: 404,
-          message: "User not found" },
+          message: "User not found",
+        },
         headers: {
           "Content-Type": "application/json",
         },
@@ -137,6 +151,7 @@ const getProfile = async (request, context) => {
   }
 };
 
+// Login controller to authenticate user
 const login = async (request, context) => {
   try {
     // convert the request body to JSON
@@ -155,8 +170,35 @@ const login = async (request, context) => {
         },
       });
     }
+    // check if user exists
+    const userExist = await authService.getUserByEmail(email);
+    if(!userExist){
+      return (context.res = {
+        status: 400,
+        body: JSON.stringify({
+          status: 400,
+          message: "User does not exist",
+        }),
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+    }
+    // check user  password
+    const isMatch = await bcrypt.compare(password, userExist.password);
+    if (!isMatch) {
+      return (context.res = {
+        status: 400,
+        jsonBody: {
+          status: 400,
+          message: "Invalid password",
+        },
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+    }
 
-    // const token = await authService.login(body);
     const jwtToken = generateAccessToken(email);
 
     return (context.res = {
@@ -186,6 +228,7 @@ const login = async (request, context) => {
   }
 };
 
+// Change password controller to update user password
 const changePassword = async (request, context) => {
   try {
     const body = await request.json();
@@ -265,6 +308,7 @@ const changePassword = async (request, context) => {
   }
 };
 
+// Forgot password controller to send password reset instructions
 const forgotPassword = async (request, context) => {
   context.log(
     "HTTP function processed request for forgot password",

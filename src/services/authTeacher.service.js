@@ -67,6 +67,7 @@ const changePassword = async (body) => {
     throw new Error(error);
   }
 };
+
 const login = async (request, context) => {
   context.log("HTTP function processed request for login", request.body);
   try {
@@ -74,7 +75,6 @@ const login = async (request, context) => {
     throw new Error("Invalid credentials");
   }
 };
-
 
 
 module.exports = {

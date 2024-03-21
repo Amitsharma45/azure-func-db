@@ -20,7 +20,7 @@ app.http("signUp", {
 // Get profile endpoint
 app.http("getProfile", {
     methods: ["GET"],
-    authLevel: "function",
+    authLevel: "anonymous",
     route: "auth/teacher/getProfile/{id}",
     handler: authTeacher.getProfile
 });
@@ -28,7 +28,7 @@ app.http("getProfile", {
 // Change password endpoint
 app.http("changePassword", {
     methods: ["POST"],
-    authLevel: "function", // Assuming authentication is required to change password
+    authLevel: "anonymous", // Assuming authentication is required to change password
     route: "auth/teacher/changePassword",
     handler: authTeacher.changePassword
 });
@@ -44,7 +44,7 @@ app.http("forgotPassword", {
 // Update profile endpoint
 app.http("updateProfile", {
     methods: ["POST"],
-    authLevel: "function",
+    authLevel: "anonymous",
     route: "auth/teacher/updateProfile",
     handler: authTeacher.updateProfile
 });

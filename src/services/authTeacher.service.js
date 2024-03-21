@@ -11,6 +11,19 @@ const signUp = async (body) => {
     throw new Error(error);
   }
 };
+const getUserByEmail = async (email) => {
+  try {
+    const data = await connection.users.findOne({
+      where: {
+        email: email,
+      },
+    });
+    return data;
+  } catch (error) {
+    console.log("------get user by id error", error.message);
+    throw new Error(error);
+  }
+}
 
 const getUserById = async (id) => {
   try {
@@ -69,5 +82,6 @@ module.exports = {
   signUp,
   getUserById,
   updateProfile,
-  changePassword
+  changePassword,
+  getUserByEmail
 };

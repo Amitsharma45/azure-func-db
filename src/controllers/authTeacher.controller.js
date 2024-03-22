@@ -80,37 +80,23 @@ const signUp = async (request, context) => {
 // Get profile controller to get user profile
 const getProfile = async (request, context) => {
   try {
-    const { id } = request.params;
-    if (!id) {
-      return (context.res = {
-        status: 400,
-        jsonBody: {
-          status: 400,
-          message: "user id required",
-        },
-        headers: {
-          "Content-Type": "application/json",
-        },
-      });
-    }
-    
+
     const data = await Authenticate(request);
-    
     if (data.status !== 200) {
       return (context.res = {
         status: 401,
         jsonBody: {
           status: 401,
-          message: "Unauthorized",
+          message: "Unauthorized access ",
         },
         headers: {
           "Content-Type": "application/json",
         },
       });
     }
-
     // get user by id
-    const user = await authService.getUserById(id);
+    const { decodeUser } = data;
+    const user = await authService.getUserByEmail(decodeUser.email);
 
     // check if user exists
     if (!user) {

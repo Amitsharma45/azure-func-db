@@ -21,7 +21,7 @@ app.http("signUp", {
 app.http("getProfile", {
     methods: ["GET"],
     authLevel: "anonymous",
-    route: "auth/teacher/getProfile/{id}",
+    route: "auth/teacher/getProfile",
     handler: authTeacher.getProfile
 });
 

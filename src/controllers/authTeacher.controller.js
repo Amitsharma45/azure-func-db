@@ -1,7 +1,8 @@
 const authService = require("../services/authTeacher.service");
 const bcrypt = require("bcryptjs");
 const { generateAccessToken } = require("../utils/generateToken");
-const { Authenticate} = require("../utils/verifyToken");
+const { Authenticate } = require("../utils/verifyToken");
+
 // Sign-Up controller to create a new user
 const signUp = async (request, context) => {
   try {
@@ -158,7 +159,7 @@ const login = async (request, context) => {
     }
     // check if user exists
     const userExist = await authService.getUserByEmail(email);
-    if(!userExist){
+    if (!userExist) {
       return (context.res = {
         status: 400,
         body: JSON.stringify({

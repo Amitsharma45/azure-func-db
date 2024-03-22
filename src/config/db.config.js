@@ -8,7 +8,6 @@ const initializeConnection = async () => {
   const password = process.env.password;
   const database = process.env.database;
   
-  
   const sequelize = new Sequelize(
     database,
     userName,
@@ -19,7 +18,6 @@ const initializeConnection = async () => {
       dialect: "mssql",
     }
   );
-  
   try {
     await sequelize.authenticate();
     console.log("Connection has been established successfully.");

@@ -95,7 +95,7 @@ const getProfile = async (request, context) => {
     }
     
     const data = await Authenticate(request);
-    console.log('------------------------', data);
+    
     if (data.status !== 200) {
       return (context.res = {
         status: 401,

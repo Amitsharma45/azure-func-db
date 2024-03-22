@@ -28,6 +28,10 @@ module.exports = (sequelize, DataTypes, Model) => {
       accessLevel: {
         type: DataTypes.STRING,
       },
+      birthYear:{
+        type: DataTypes.INTEGER,
+        allowNull: false
+      },
       createdAt: {
         type: DataTypes.DATE,
         allowNull: false,

@@ -11,6 +11,19 @@ const signUp = async (body) => {
     throw new Error(error);
   }
 };
+const getUserByEmail = async (email) => {
+  try {
+    const data = await connection.users.findOne({
+      where: {
+        email: email,
+      },
+    });
+    return data;
+  } catch (error) {
+    console.log("------get user by id error", error.message);
+    throw new Error(error);
+  }
+}
 
 const getUserById = async (id) => {
   try {
@@ -54,6 +67,7 @@ const changePassword = async (body) => {
     throw new Error(error);
   }
 };
+
 const login = async (request, context) => {
   context.log("HTTP function processed request for login", request.body);
   try {
@@ -63,11 +77,11 @@ const login = async (request, context) => {
 };
 
 
-
 module.exports = {
   login,
   signUp,
   getUserById,
   updateProfile,
-  changePassword
+  changePassword,
+  getUserByEmail
 };

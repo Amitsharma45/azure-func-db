@@ -1,19 +1,44 @@
 const authService = require("../services/authTeacher.service");
 const bcrypt = require("bcryptjs");
 const { generateAccessToken } = require("../utils/generateToken");
+const { Authenticate } = require("../utils/verifyToken");
 
 // Sign-Up controller to create a new user
 const signUp = async (request, context) => {
   try {
     const body = await request.json();
-    const { firstName, lastName, email, password, accessLevel } = body;
+    const { firstName, lastName, email, password, accessLevel, birthYear } =
+      body;
 
-    if (!firstName || !lastName || !email || !password || !accessLevel) {
+    const userExist = await authService.getUserByEmail(email);
+
+    if (userExist) {
       return (context.res = {
         status: 400,
-        body: JSON.stringify({
+        jsonBody: {
+          status: 400,
+          message: `User already exists with this email address ${email}`,
+        },
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+    }
+
+    if (
+      !firstName ||
+      !lastName ||
+      !email ||
+      !password ||
+      !accessLevel ||
+      !birthYear
+    ) {
+      return (context.res = {
+        status: 400,
+        jsonBody: {
+          status: 400,
           message: "Please send all required fields",
-        }),
+        },
         headers: {
           "Content-Type": "application/json",
         },
@@ -31,6 +56,7 @@ const signUp = async (request, context) => {
     return (context.res = {
       status: 200,
       body: JSON.stringify({
+        status: 200,
         message: "User created successfully",
         user: user,
       }),
@@ -42,6 +68,7 @@ const signUp = async (request, context) => {
     return (context.res = {
       status: 500,
       body: JSON.stringify({
+        status: 500,
         message: "Internal Server Error",
       }),
       headers: {
@@ -54,26 +81,32 @@ const signUp = async (request, context) => {
 // Get profile controller to get user profile
 const getProfile = async (request, context) => {
   try {
-    const { id } = request.params;
-    console.log("------id----", id);
-    if (!id) {
+
+    const data = await Authenticate(request);
+    if (data.status !== 200) {
       return (context.res = {
-        status: 400,
-        body: "user id required",
+        status: 401,
+        jsonBody: {
+          status: 401,
+          message: "Unauthorized access ",
+        },
         headers: {
           "Content-Type": "application/json",
         },
       });
     }
-
     // get user by id
-    const user = await authService.getUserById(id);
+    const { decodeUser } = data;
+    const user = await authService.getUserByEmail(decodeUser.email);
 
     // check if user exists
     if (!user) {
       return (context.res = {
         status: 404,
-        body: JSON.stringify({ message: "User not found" }),
+        jsonBody: {
+          status: 404,
+          message: "User not found",
+        },
         headers: {
           "Content-Type": "application/json",
         },
@@ -82,10 +115,11 @@ const getProfile = async (request, context) => {
 
     return (context.res = {
       status: 200,
-      body: JSON.stringify({
+      jsonBody: {
+        status: 200,
         message: "User profile retrieved successfully",
         user: user,
-      }),
+      },
       headers: {
         "Content-Type": "application/json",
       },
@@ -93,9 +127,10 @@ const getProfile = async (request, context) => {
   } catch (error) {
     return (context.res = {
       status: 500,
-      body: JSON.stringify({
+      jsonBody: {
+        status: 500,
         message: "Internal Server Error",
-      }),
+      },
       headers: {
         "Content-Type": "application/json",
       },
@@ -103,17 +138,18 @@ const getProfile = async (request, context) => {
   }
 };
 
+// Login controller to authenticate user
 const login = async (request, context) => {
   try {
     // convert the request body to JSON
     const body = await request.json();
     const { email, password } = body;
-    console.log("------body----", body);
 
     if (!email || !password) {
       return (context.res = {
         status: 400,
         body: JSON.stringify({
+          status: 400,
           message: "Please send all required fields",
         }),
         headers: {
@@ -121,13 +157,41 @@ const login = async (request, context) => {
         },
       });
     }
+    // check if user exists
+    const userExist = await authService.getUserByEmail(email);
+    if (!userExist) {
+      return (context.res = {
+        status: 400,
+        body: JSON.stringify({
+          status: 400,
+          message: "User does not exist",
+        }),
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+    }
+    // check user  password
+    const isMatch = await bcrypt.compare(password, userExist.password);
+    if (!isMatch) {
+      return (context.res = {
+        status: 400,
+        jsonBody: {
+          status: 400,
+          message: "Invalid password",
+        },
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+    }
 
-    // const token = await authService.login(body);
     const jwtToken = generateAccessToken(email);
 
     return (context.res = {
       status: 200,
       body: JSON.stringify({
+        status: 200,
         message: "User logged in successfully",
         token: jwtToken,
       }),
@@ -140,7 +204,10 @@ const login = async (request, context) => {
   } catch (error) {
     return (context.res = {
       status: 500,
-      body: "Internal Server Error",
+      jsonBody: {
+        status: 500,
+        message: "Internal Server Error",
+      },
       headers: {
         "Content-Type": "application/json",
       },
@@ -148,6 +215,7 @@ const login = async (request, context) => {
   }
 };
 
+// Change password controller to update user password
 const changePassword = async (request, context) => {
   try {
     const body = await request.json();
@@ -156,9 +224,10 @@ const changePassword = async (request, context) => {
     if (!id || !oldPassword || !newPassword) {
       return (context.res = {
         status: 400,
-        body: JSON.stringify({
+        jsonBody: {
+          status: 400,
           message: "Please send all required fields",
-        }),
+        },
         headers: {
           "Content-Type": "application/json",
         },
@@ -170,9 +239,10 @@ const changePassword = async (request, context) => {
     if (!user) {
       return (context.res = {
         status: 404,
-        body: JSON.stringify({
+        jsonBody: {
+          status: 404,
           message: "User not found",
-        }),
+        },
         headers: {
           "Content-Type": "application/json",
         },
@@ -184,9 +254,10 @@ const changePassword = async (request, context) => {
     if (!isMatch) {
       return (context.res = {
         status: 400,
-        body: JSON.stringify({
+        jsonBody: {
+          status: 400,
           message: "Old password is incorrect",
-        }),
+        },
         headers: {
           "Content-Type": "application/json",
         },
@@ -201,10 +272,11 @@ const changePassword = async (request, context) => {
 
     return (context.res = {
       status: 200,
-      body: JSON.stringify({
+      jsonBody: {
+        status: 200,
         message: "Password updated successfully",
         user: user,
-      }),
+      },
       headers: {
         "Content-Type": "application/json",
       },
@@ -212,9 +284,10 @@ const changePassword = async (request, context) => {
   } catch (error) {
     return (context.res = {
       status: 500,
-      body: JSON.stringify({
+      jsonBody: {
+        status: 500,
         message: "Internal Server Error",
-      }),
+      },
       headers: {
         "Content-Type": "application/json",
       },
@@ -222,6 +295,7 @@ const changePassword = async (request, context) => {
   }
 };
 
+// Forgot password controller to send password reset instructions
 const forgotPassword = async (request, context) => {
   context.log(
     "HTTP function processed request for forgot password",
@@ -239,19 +313,15 @@ const forgotPassword = async (request, context) => {
 const updateProfile = async (request, context) => {
   try {
     const body = await request.json();
-    const { id, firstName, lastName, email } = body;
+    const { id } = body;
 
-    if (
-      !id ||
-      !firstName ||
-      !lastName ||
-      !email
-    ) {
+    if (!id) {
       return (context.res = {
         status: 400,
-        body: JSON.stringify({
+        jsonBody: {
+          status: 400,
           message: "Please send all required fields",
-        }),
+        },
         headers: {
           "Content-Type": "application/json",
         },
@@ -264,7 +334,10 @@ const updateProfile = async (request, context) => {
     if (!user) {
       return (context.res = {
         status: 404,
-        body: "User not found",
+        jsonBody: {
+          status: 404,
+          message: "User not found",
+        },
         headers: {
           "Content-Type": "application/json",
         },
@@ -276,9 +349,10 @@ const updateProfile = async (request, context) => {
 
     return (context.res = {
       status: 200,
-      body: JSON.stringify({
+      jsonBody: {
+        status: 200,
         message: "User profile updated successfully",
-      }),
+      },
       headers: {
         "Content-Type": "application/json",
       },
@@ -286,7 +360,10 @@ const updateProfile = async (request, context) => {
   } catch (error) {
     return (context.res = {
       status: 500,
-      body: "Internal Server Error",
+      jsonBody: {
+        status: 500,
+        message: "Internal Server Error",
+      },
       headers: {
         "Content-Type": "application/json",
       },

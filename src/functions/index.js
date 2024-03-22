@@ -4,7 +4,7 @@ const db = require("./../config/db.config");
 app.hook.appStart(async (context) => {
   // initialize connection to db
   try {
-    this.db = await db.initializeConnection();
+    await db.initializeConnection();
     console.log("db connected success");
   } catch (error) {
     console.error("Error connecting to the database:", error);

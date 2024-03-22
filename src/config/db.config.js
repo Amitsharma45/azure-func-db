@@ -4,7 +4,7 @@ const db = {};
 const initializeConnection = async () => {
 
   const hostName = process.env.hostName ;
-  const userName = process.env.userName;
+  const userName = process.env.userRootName;
   const password = process.env.password;
   const database = process.env.database;
   

@@ -5,7 +5,7 @@
     "AzureWebJobsStorage": "UseDevelopmentStorage=true",
     "JWT_SECRET_KEY": "mySecretKey",
     "hostName": "onelabdbserver.database.windows.net",
-    "userName": "adminOnelab",
+    "userRootName": "adminOnelab",
     "password": "Onelab0504#",
     "database": "onlabtestingdb",
     "port": "1443"

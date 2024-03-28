@@ -23,11 +23,10 @@ const getUserByEmail = async (email) => {
     console.log("------get user by id error", error.message);
     throw new Error(error);
   }
-}
+};
 
 const getUserById = async (id) => {
   try {
-   
     const data = await connection.users.findOne({
       where: {
         id: id,
@@ -35,14 +34,12 @@ const getUserById = async (id) => {
     });
     return data;
   } catch (error) {
-    
     throw new Error(error);
   }
 };
 
 const updateProfile = async (body) => {
   try {
-   
     const data = await connection.users.update(body, {
       where: {
         id: body.id,
@@ -76,12 +73,11 @@ const login = async (request, context) => {
   }
 };
 
-
 module.exports = {
   login,
   signUp,
   getUserById,
   updateProfile,
   changePassword,
-  getUserByEmail
+  getUserByEmail,
 };

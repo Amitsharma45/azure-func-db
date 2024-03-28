@@ -1,10 +1,11 @@
 const { sendEmail } = require("../config/send-email");
+const invitedUserService = require("../services/invitedUser.sevice");
 
 // Define the inviteUser function
 const inviteUser = async (request, context) => {
   try {
     const body = await request.json();
-    const { email, name } = body;
+    const { invited_by, email, name, invited_as, community_id } = body;
 
     const emailSubject = `You have been invited to SymphoMe by ${name}!`;
     const emailBody =
@@ -20,17 +21,11 @@ const inviteUser = async (request, context) => {
 
     // Check if email was sent successfully
     if (emailResponse.status === 200) {
-      // Return a success response for user invitation
-      return (context.res = {
-        status: 200,
-        body: JSON.stringify({
-          status: 200,
-          message: "User invited successfully and email sent.",
-          emailResponse: emailResponse.body, // Include email response in the message
-        }),
-        headers: {
-          "Content-Type": "application/json",
-        },
+      return await invitedUserService.createInvitedUser({
+        invited_by,
+        email,
+        invited_as,
+        community_id,
       });
     } else {
       // Return an error response if email sending failed
@@ -62,7 +57,85 @@ const inviteUser = async (request, context) => {
   }
 };
 
-// Export the inviteUser function
+// Controller to get an invited user by ID
+const getInvitedUserById = async (request, context) => {
+  try {
+    return await invitedUserService.getInvitedUserById(request, context);
+  } catch (error) {
+    return {
+      status: 500,
+      jsonBody: {
+        status: 500,
+        message: "Internal Server Error",
+      },
+      headers: {
+        "Content-Type": "application/json",
+      },
+    };
+  }
+};
+
+// Controller to get invited users by community ID
+const getInvitedUsersByCommunityId = async (request, context) => {
+  try {
+    return await invitedUserService.getInvitedUsersByCommunityId(
+      request,
+      context
+    );
+  } catch (error) {
+    return {
+      status: 500,
+      jsonBody: {
+        status: 500,
+        message: "Internal Server Error",
+      },
+      headers: {
+        "Content-Type": "application/json",
+      },
+    };
+  }
+};
+
+// Controller to get all invited users
+const getAllInvitedUsers = async (request, context) => {
+  try {
+    return await invitedUserService.getAllInvitedUsers(request, context);
+  } catch (error) {
+    return {
+      status: 500,
+      jsonBody: {
+        status: 500,
+        message: "Internal Server Error",
+      },
+      headers: {
+        "Content-Type": "application/json",
+      },
+    };
+  }
+};
+
+// Controller to get all invited users
+const deleteInvitedUserById = async (request, context) => {
+  try {
+    console.log("here--", request);
+    return await invitedUserService.deleteInvitedUserById(request, context);
+  } catch (error) {
+    return {
+      status: 500,
+      jsonBody: {
+        status: 500,
+        message: "Internal Server Error",
+      },
+      headers: {
+        "Content-Type": "application/json",
+      },
+    };
+  }
+};
 module.exports = {
   inviteUser,
+  getInvitedUserById,
+  getInvitedUsersByCommunityId,
+  getAllInvitedUsers,
+  deleteInvitedUserById,
 };

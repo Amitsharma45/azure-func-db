@@ -81,7 +81,6 @@ const signUp = async (request, context) => {
 // Get profile controller to get user profile
 const getProfile = async (request, context) => {
   try {
-
     const data = await Authenticate(request);
     if (data.status !== 200) {
       return (context.res = {
@@ -158,6 +157,8 @@ const login = async (request, context) => {
       });
     }
     // check if user exists
+
+    console.log("here");
     const userExist = await authService.getUserByEmail(email);
     if (!userExist) {
       return (context.res = {

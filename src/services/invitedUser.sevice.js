@@ -177,8 +177,6 @@ const deleteInvitedUserById = async (request, context) => {
   try {
     const { id } = request.params;
 
-    console.log("id111111111111", id);
-
     const deletedInvitedUser = await connection.invited_users.destroy({
       where: { id },
     });
@@ -220,10 +218,56 @@ const deleteInvitedUserById = async (request, context) => {
   }
 };
 
+// Get a single invited user by email
+const getInvitedUserByEmail = async (email) => {
+  try {
+    const invitedUser = await connection.invited_users.findOne({
+      where: { email },
+    });
+
+    if (!invitedUser) {
+      return {
+        status: 404,
+        jsonBody: {
+          status: 404,
+          message: "Invited user not found",
+        },
+        headers: {
+          "Content-Type": "application/json",
+        },
+      };
+    }
+
+    return {
+      status: 200,
+      jsonBody: {
+        status: 200,
+        message: "Invited user retrieved successfully",
+        invitedUser,
+      },
+      headers: {
+        "Content-Type": "application/json",
+      },
+    };
+  } catch (error) {
+    return {
+      status: 500,
+      jsonBody: {
+        status: 500,
+        message: "Internal Server Error",
+      },
+      headers: {
+        "Content-Type": "application/json",
+      },
+    };
+  }
+};
+
 module.exports = {
   createInvitedUser,
   getInvitedUserById,
   getAllInvitedUsers,
   updateInvitedUser,
   deleteInvitedUserById,
+  getInvitedUserByEmail,
 };

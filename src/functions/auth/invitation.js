@@ -1,7 +1,6 @@
 const { app } = require("@azure/functions");
 const invitation = require("../../controllers/invitation.controller");
 
-// Login endpoint
 app.http("inviteUser", {
   methods: ["POST"],
   authLevel: "anonymous",
@@ -35,4 +34,25 @@ app.http("deleteInvitedUserById", {
   authLevel: "anonymous",
   route: "invitation/user/{id}",
   handler: invitation.deleteInvitedUserById,
+});
+
+app.http("createInviteCode", {
+  methods: ["POST"],
+  authLevel: "anonymous",
+  route: "inviteCode/create",
+  handler: invitation.createInviteCode,
+});
+
+app.http("getInviteCodeById", {
+  methods: ["GET"],
+  authLevel: "anonymous",
+  route: "inviteCode/{id}",
+  handler: invitation.getInviteCodeById,
+});
+
+app.http("getInviteCodeByUserId", {
+  methods: ["GET"],
+  authLevel: "anonymous",
+  route: "inviteCode/user/{userId}",
+  handler: invitation.getInviteCodeByUserId,
 });

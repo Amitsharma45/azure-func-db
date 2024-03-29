@@ -34,6 +34,11 @@ const initializeConnection = async () => {
     DataTypes,
     Model
   );
+  db.invite_codes = require("../model/inviteCodes.model")(
+    sequelize,
+    DataTypes,
+    Model
+  );
 
   return db;
 };

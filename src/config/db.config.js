@@ -39,6 +39,11 @@ const initializeConnection = async () => {
     DataTypes,
     Model
   );
+  db.community_members = require("../model/communityMembers.model")(
+    sequelize,
+    DataTypes,
+    Model
+  );
 
   return db;
 };

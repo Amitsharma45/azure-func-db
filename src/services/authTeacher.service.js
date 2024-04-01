@@ -7,7 +7,6 @@ const signUp = async (body) => {
     const data = await connection.users.create(body);
     return data;
   } catch (error) {
-    console.log("------get user by id error", error.message);
     throw new Error(error);
   }
 };
@@ -20,7 +19,6 @@ const getUserByEmail = async (email) => {
     });
     return data;
   } catch (error) {
-    console.log("------get user by id error", error.message);
     throw new Error(error);
   }
 };
@@ -60,7 +58,6 @@ const changePassword = async (body) => {
     });
     return "User password changed successfully";
   } catch (error) {
-    console.log("------change password error", error);
     throw new Error(error);
   }
 };

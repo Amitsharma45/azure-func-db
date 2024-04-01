@@ -158,7 +158,6 @@ const login = async (request, context) => {
     }
     // check if user exists
 
-    console.log("here");
     const userExist = await authService.getUserByEmail(email);
     if (!userExist) {
       return (context.res = {

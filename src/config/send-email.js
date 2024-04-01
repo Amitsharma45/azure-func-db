@@ -4,8 +4,6 @@ const connectionString = process.env.AzureConnectionString;
 const client = new EmailClient(connectionString);
 
 const sendEmail = async (subject, plainText, to, context) => {
-  console.log(connectionString, process.env.EmailSenderAddress);
-
   try {
     const emailMessage = {
       senderAddress: process.env.EmailSenderAddress,

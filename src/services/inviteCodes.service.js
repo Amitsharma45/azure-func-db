@@ -119,7 +119,6 @@ const getInviteCodeByUserId = async (request) => {
       },
     };
   } catch (error) {
-    console.log("Error: ", error);
     return {
       status: 500,
       jsonBody: {

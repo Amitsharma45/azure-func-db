@@ -14,7 +14,6 @@ const inviteUser = async (request, context) => {
       email
     );
 
-    console.log("existingInvitedUser", existingInvitedUser);
     if (existingInvitedUser.status === 200) {
       // User has already been invited, return appropriate response
       return {
@@ -163,7 +162,6 @@ const getAllInvitedUsers = async (request, context) => {
 // Controller to get all invited users
 const deleteInvitedUserById = async (request, context) => {
   try {
-    console.log("here--", request);
     return await invitedUserService.deleteInvitedUserById(request, context);
   } catch (error) {
     return {

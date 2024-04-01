@@ -92,9 +92,7 @@ const getInvitedUserById = async (request, context) => {
 // Get all invited users
 const getAllInvitedUsers = async (request, context) => {
   try {
-    console.log("here2");
     const invitedUsers = await connection.invited_users.findAll();
-    console.log("invitedUsers", invitedUsers);
 
     return {
       status: 200,
@@ -108,7 +106,6 @@ const getAllInvitedUsers = async (request, context) => {
       },
     };
   } catch (error) {
-    console.log("Error123:", error);
     return {
       status: 500,
       jsonBody: {

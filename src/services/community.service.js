@@ -73,7 +73,6 @@ const getCommunityById = async (request, context) => {
       },
     };
   } catch (error) {
-    console.log("Error123: ", error);
     return {
       status: 500,
       jsonBody: {
@@ -92,13 +91,9 @@ const getCommunityByOwnerId = async (request, context) => {
   try {
     const { ownerId } = request.params;
 
-    console.log("ownerId", ownerId);
-
     const community = await connection.communities.findOne({
       where: { owner_id: ownerId },
     });
-
-    console.log("community", community);
 
     if (!community) {
       return {
@@ -125,7 +120,6 @@ const getCommunityByOwnerId = async (request, context) => {
       },
     };
   } catch (error) {
-    console.log("Error:", error);
     return {
       status: 500,
       jsonBody: {
@@ -156,7 +150,6 @@ const getAllCommunities = async (request, context) => {
       },
     };
   } catch (error) {
-    console.log("Error", error);
     return {
       status: 500,
       jsonBody: {

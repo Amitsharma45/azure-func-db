@@ -2,7 +2,8 @@ const communityService = require("../services/community.service");
 
 // Controller to create a new community
 const createCommunity = async (request, context) => {
-  return await communityService.createCommunity(request, context);
+  const body = await request.json();
+  return await communityService.createCommunity(body, context);
 };
 
 // Controller to get a community by ID

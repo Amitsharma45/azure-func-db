@@ -3,6 +3,7 @@ const inviteCodeService = require("../services/inviteCodes.service");
 const invitedUserService = require("../services/invitedUser.sevice");
 const communityService = require("../services/community.service");
 const communityMembersService = require("../services/communityMembers.service");
+const { generateUniqueString } = require("../config/generate-code");
 
 const bcrypt = require("bcryptjs");
 const { generateAccessToken } = require("../utils/generateToken");
@@ -113,6 +114,16 @@ const signUp = async (request, context) => {
       },
       context
     );
+
+    const teachers_invite_code = generateUniqueString();
+    const students_invite_code = generateUniqueString();
+
+    const inviteCodes = await inviteCodeService.createInviteCode({
+      userId: user.id,
+      community_id: communityId,
+      teachers_invite_code,
+      students_invite_code,
+    });
 
     return (context.res = {
       status: 200,

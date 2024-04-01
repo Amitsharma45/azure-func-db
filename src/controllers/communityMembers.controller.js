@@ -2,7 +2,8 @@ const communityMemberService = require("../services/communityMembers.service");
 
 // Controller to add a member to a community
 const addCommunityMember = async (request, context) => {
-  return await communityMemberService.addCommunityMember(request, context);
+  const body = await request.json();
+  return await communityMemberService.addCommunityMember(body, context);
 };
 
 // Controller to get all members of a community

@@ -8,6 +8,8 @@ const { generateUniqueString } = require("../config/generate-code");
 const bcrypt = require("bcryptjs");
 const { generateAccessToken } = require("../utils/generateToken");
 const { Authenticate } = require("../utils/verifyToken");
+const jwt = require("jsonwebtoken");
+const { json } = require("sequelize");
 
 // Sign-Up controller to create a new user
 const signUp = async (request, context) => {
@@ -23,6 +25,8 @@ const signUp = async (request, context) => {
       inviteCode,
     } = body;
 
+    // check if userToken is valid
+    // Sign up with email and password
     if (
       !firstName ||
       !lastName ||
@@ -143,11 +147,11 @@ const signUp = async (request, context) => {
 
     return (context.res = {
       status: 200,
-      body: JSON.stringify({
+      jsonBody: {
         status: 200,
         message: "User created successfully",
         user: user,
-      }),
+      },
       headers: {
         "Content-Type": "application/json",
       },
@@ -155,10 +159,10 @@ const signUp = async (request, context) => {
   } catch (error) {
     return (context.res = {
       status: 500,
-      body: JSON.stringify({
+      jsonBody: {
         status: 500,
         message: "Internal Server Error",
-      }),
+      },
       headers: {
         "Content-Type": "application/json",
       },
@@ -235,10 +239,10 @@ const login = async (request, context) => {
     if (!email || !password) {
       return (context.res = {
         status: 400,
-        body: JSON.stringify({
+        jsonBody: {
           status: 400,
           message: "Please send all required fields",
-        }),
+        },
         headers: {
           "Content-Type": "application/json",
         },
@@ -250,10 +254,10 @@ const login = async (request, context) => {
     if (!userExist) {
       return (context.res = {
         status: 400,
-        body: JSON.stringify({
+        jsonBody: {
           status: 400,
           message: "User does not exist",
-        }),
+        },
         headers: {
           "Content-Type": "application/json",
         },
@@ -278,11 +282,187 @@ const login = async (request, context) => {
 
     return (context.res = {
       status: 200,
-      body: JSON.stringify({
+      jsonBody: {
         status: 200,
         message: "User logged in successfully",
         token: jwtToken,
-      }),
+      },
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${jwtToken}`,
+        "Set-Cookie": `jwtToken=${jwtToken}`,
+      },
+    });
+  } catch (error) {
+    return (context.res = {
+      status: 500,
+      jsonBody: {
+        status: 500,
+        message: "Internal Server Error",
+      },
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+  }
+};
+
+const signupWithApple = async (request, context) => {
+  try {
+    // convert the request body to JSON
+    const body = await request.json();
+    const { firstName, lastName, accessLevel, birthYear, userToken, nonce } =
+      body;
+
+    if (!userToken || !nonce) {
+      return (context.res = {
+        status: 400,
+        jsonBody: {
+          status: 400,
+          message: "User Token and nonce is required to sign up with Apple",
+        },
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+    }
+
+    const decodeToken = jwt.decode(userToken);
+    body.email = decodeToken.email;
+
+    // check if user exists
+    const userExist = await authService.getUserByEmail(body.email);
+
+    if (userExist) {
+      // check if userToken is valid
+      console.log("nonce--->", { nonce, decodeToken });
+      if (nonce !== decodeToken.nonce) {
+        return (context.res = {
+          status: 400,
+          jsonBody: {
+            status: 400,
+            message: "Invalid User nonce Token",
+          },
+          headers: {
+            "Content-Type": "application/json",
+          },
+        });
+      }
+
+      const jwtToken = generateAccessToken(decodeToken.email);
+
+      return (context.res = {
+        status: 200,
+        jsonBody: {
+          status: 200,
+          message: "User logged in successfully",
+          token: jwtToken,
+        },
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${jwtToken}`,
+          "Set-Cookie": `jwtToken=${jwtToken}`,
+        },
+      });
+    } else {
+      if (!firstName || !lastName || !accessLevel || !birthYear) {
+        return (context.res = {
+          status: 400,
+          jsonBody: {
+            status: 400,
+            message: "Please send all required fields",
+          },
+          headers: {
+            "Content-Type": "application/json",
+          },
+        });
+      }
+      // creating a new user
+      delete body.userToken;
+      const user = await authService.signUp(body);
+
+      return (context.res = {
+        status: 200,
+        jsonBody: {
+          status: 200,
+          message: "User created successfully",
+          user: user,
+        },
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+    }
+  } catch (error) {
+    return (context.res = {
+      status: 500,
+      jsonBody: {
+        status: 500,
+        message: "Internal Server Error",
+      },
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+  }
+};
+
+const loginWithApple = async (request, context) => {
+  try {
+    // convert the request body to JSON
+    const body = await request.json();
+    const { userToken, nonce } = body;
+    if (!userToken || !nonce) {
+      return (context.res = {
+        status: 400,
+        jsonBody: {
+          status: 400,
+          message: "Please send all required fields",
+        },
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+    }
+    const decodeToken = jwt.decode(userToken);
+    // check if user exists
+    const userExist = await authService.getUserByEmail(decodeToken.email);
+
+    if (!userExist) {
+      return (context.res = {
+        status: 400,
+        jsonBody: {
+          status: 400,
+          message: "User does not exist",
+        },
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+    }
+    // check user  nonce token
+    if (nonce !== decodeToken.nonce) {
+      return (context.res = {
+        status: 400,
+        jsonBody: {
+          status: 400,
+          message: "Invalid User nonce Token",
+        },
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+    }
+
+    const jwtToken = generateAccessToken(decodeToken.email);
+
+    return (context.res = {
+      status: 200,
+      jsonBody: {
+        status: 200,
+        message: "User logged in successfully",
+        token: jwtToken,
+      },
       headers: {
         "Content-Type": "application/json",
         Authorization: `Bearer ${jwtToken}`,
@@ -461,6 +641,8 @@ const updateProfile = async (request, context) => {
 
 module.exports = {
   login,
+  loginWithApple,
+  signupWithApple,
   signUp,
   changePassword,
   forgotPassword,

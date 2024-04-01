@@ -9,6 +9,22 @@ app.http("login", {
     handler: authTeacher.login
 });
 
+// Login with Apple endpoint
+app.http("loginWithApple", {
+    methods: ["POST"],
+    authLevel: "anonymous",
+    route: "auth/teacher/loginWithApple",
+    handler: authTeacher.loginWithApple
+});   
+
+// Sign-Up with Apple endpoint
+app.http('signUpWithApple', {
+    methods: ['POST'],
+    authLevel: 'anonymous',
+    route: 'auth/teacher/signupWithApple',
+    handler: authTeacher.signupWithApple
+});
+
 // Sign-Up endpoint
 app.http("signUp", {
     methods: ["POST"],

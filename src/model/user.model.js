@@ -23,7 +23,6 @@ module.exports = (sequelize, DataTypes, Model) => {
       },
       password: {
         type: DataTypes.STRING,
-        allowNull: false, // Assuming password is always required
       },
       accessLevel: {
         type: DataTypes.STRING,

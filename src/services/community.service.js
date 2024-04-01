@@ -4,14 +4,11 @@ const connection = db.getConnection();
 // Create a new community
 const createCommunity = async (request, context) => {
   try {
-    const body = await request.json();
-    const { owner_id, createdAt, updatedAt } = body;
+    const { owner_id } = request;
 
     // Create the community
     const community = await connection.communities.create({
       owner_id,
-      createdAt,
-      updatedAt,
     });
 
     return {

@@ -4,8 +4,7 @@ const connection = db.getConnection();
 // Add a user to a community
 const addCommunityMember = async (request, context) => {
   try {
-    const body = await request.json();
-    const { member_id, member_type, community_id } = body;
+    const { member_id, member_type, community_id } = request;
 
     // Create the community member
     const communityMember = await connection.community_members.create({

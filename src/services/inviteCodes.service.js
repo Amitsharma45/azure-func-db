@@ -132,10 +132,104 @@ const getInviteCodeByUserId = async (request) => {
   }
 };
 
+const getDataByTeacherInviteCode = async (request) => {
+  const { teacher_invite_code } = request;
+
+  try {
+    const inviteCode = await connection.invite_codes.findOne({
+      where: { teachers_invite_code: teacher_invite_code },
+    });
+
+    if (!inviteCode) {
+      return {
+        status: 404,
+        jsonBody: {
+          status: 404,
+          message: "Invite code not found for the teacher invite code",
+        },
+        headers: {
+          "Content-Type": "application/json",
+        },
+      };
+    }
+
+    return {
+      status: 200,
+      jsonBody: {
+        status: 200,
+        message: "Invite code retrieved successfully",
+        inviteCode,
+      },
+      headers: {
+        "Content-Type": "application/json",
+      },
+    };
+  } catch (error) {
+    return {
+      status: 500,
+      jsonBody: {
+        status: 500,
+        message: "Internal Server Error",
+      },
+      headers: {
+        "Content-Type": "application/json",
+      },
+    };
+  }
+};
+
+const getDataByStudentInviteCode = async (request) => {
+  const { student_invite_code } = request;
+
+  try {
+    const inviteCode = await connection.invite_codes.findOne({
+      where: { students_invite_code: student_invite_code },
+    });
+
+    if (!inviteCode) {
+      return {
+        status: 404,
+        jsonBody: {
+          status: 404,
+          message: "Invite code not found for the student invite code",
+        },
+        headers: {
+          "Content-Type": "application/json",
+        },
+      };
+    }
+
+    return {
+      status: 200,
+      jsonBody: {
+        status: 200,
+        message: "Invite code retrieved successfully",
+        inviteCode,
+      },
+      headers: {
+        "Content-Type": "application/json",
+      },
+    };
+  } catch (error) {
+    return {
+      status: 500,
+      jsonBody: {
+        status: 500,
+        message: "Internal Server Error",
+      },
+      headers: {
+        "Content-Type": "application/json",
+      },
+    };
+  }
+};
+
 // Implement other CRUD operations as needed (e.g., getAllInviteCodes, updateInviteCode, deleteInviteCodeById)
 
 module.exports = {
   createInviteCode,
   getInviteCodeById,
   getInviteCodeByUserId,
+  getDataByTeacherInviteCode,
+  getDataByStudentInviteCode,
 };

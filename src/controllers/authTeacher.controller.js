@@ -1,4 +1,9 @@
 const authService = require("../services/authTeacher.service");
+const inviteCodeService = require("../services/inviteCodes.service");
+const invitedUserService = require("../services/invitedUser.sevice");
+const communityService = require("../services/community.service");
+const communityMembersService = require("../services/communityMembers.service");
+
 const bcrypt = require("bcryptjs");
 const { generateAccessToken } = require("../utils/generateToken");
 const { Authenticate } = require("../utils/verifyToken");
@@ -7,23 +12,15 @@ const { Authenticate } = require("../utils/verifyToken");
 const signUp = async (request, context) => {
   try {
     const body = await request.json();
-    const { firstName, lastName, email, password, accessLevel, birthYear } =
-      body;
-
-    const userExist = await authService.getUserByEmail(email);
-
-    if (userExist) {
-      return (context.res = {
-        status: 400,
-        jsonBody: {
-          status: 400,
-          message: `User already exists with this email address ${email}`,
-        },
-        headers: {
-          "Content-Type": "application/json",
-        },
-      });
-    }
+    const {
+      firstName,
+      lastName,
+      email,
+      password,
+      accessLevel,
+      birthYear,
+      inviteCode,
+    } = body;
 
     if (
       !firstName ||
@@ -45,6 +42,54 @@ const signUp = async (request, context) => {
       });
     }
 
+    const userExist = await authService.getUserByEmail(email);
+
+    if (userExist) {
+      return (context.res = {
+        status: 400,
+        jsonBody: {
+          status: 400,
+          message: `User already exists with this email address ${email}`,
+        },
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+    }
+
+    let communityId;
+    let isInvited = false;
+
+    if (inviteCode) {
+      if (accessLevel == "Student") {
+        const inviteCode = await inviteCodeService.getDataByStudentInviteCode(
+          { student_invite_code: inviteCode },
+          context
+        );
+        if (inviteCode.status === 404) {
+          return inviteCode;
+        }
+        communityId = inviteCode.jsonBody.inviteCode.dataValues.community_id;
+      } else {
+        const inviteCode = await inviteCodeService.getDataByTeacherInviteCode(
+          { teacher_invite_code: inviteCode },
+          context
+        );
+
+        if (inviteCode.status === 404) {
+          return inviteCode;
+        }
+        communityId = inviteCode.jsonBody.inviteCode.dataValues.community_id;
+      }
+    } else {
+      const invitedUser = await invitedUserService.getInvitedUserByEmail(email);
+
+      if (invitedUser.status !== 404) {
+        isInvited = true;
+        communityId = invitedUser.jsonBody.invitedUser.dataValues.community_id;
+      }
+    }
+
     // hash the password
     const salt = bcrypt.genSaltSync(6);
     const hashPassword = bcrypt.hashSync(password, salt);
@@ -52,6 +97,22 @@ const signUp = async (request, context) => {
 
     // creating a new user
     const user = await authService.signUp(body);
+
+    if (!inviteCode && !isInvited) {
+      const community = await communityService.createCommunity({
+        owner_id: user.id,
+      });
+      communityId = community.jsonBody.community.dataValues.id;
+    }
+
+    const communityMember = await communityMembersService.addCommunityMember(
+      {
+        member_id: user.id,
+        member_type: accessLevel,
+        community_id: communityId,
+      },
+      context
+    );
 
     return (context.res = {
       status: 200,

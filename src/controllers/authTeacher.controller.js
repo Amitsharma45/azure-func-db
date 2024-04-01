@@ -63,24 +63,24 @@ const signUp = async (request, context) => {
 
     if (inviteCode) {
       if (accessLevel == "Student") {
-        const inviteCode = await inviteCodeService.getDataByStudentInviteCode(
-          { student_invite_code: inviteCode },
+        const inviteCodes = await inviteCodeService.getDataByStudentInviteCode(
+          { students_invite_code: inviteCode },
           context
         );
-        if (inviteCode.status === 404) {
-          return inviteCode;
+        if (inviteCodes.status === 404) {
+          return inviteCodes;
         }
-        communityId = inviteCode.jsonBody.inviteCode.dataValues.community_id;
+        communityId = inviteCodes.jsonBody.inviteCode.dataValues.community_id;
       } else {
-        const inviteCode = await inviteCodeService.getDataByTeacherInviteCode(
-          { teacher_invite_code: inviteCode },
+        const inviteCodes = await inviteCodeService.getDataByTeacherInviteCode(
+          { teachers_invite_code: inviteCode },
           context
         );
 
-        if (inviteCode.status === 404) {
-          return inviteCode;
+        if (inviteCodes.status === 404) {
+          return inviteCodes;
         }
-        communityId = inviteCode.jsonBody.inviteCode.dataValues.community_id;
+        communityId = inviteCodes.jsonBody.inviteCode.dataValues.community_id;
       }
     } else {
       const invitedUser = await invitedUserService.getInvitedUserByEmail(email);
@@ -115,8 +115,24 @@ const signUp = async (request, context) => {
       context
     );
 
-    const teachers_invite_code = generateUniqueString();
-    const students_invite_code = generateUniqueString();
+    let teachers_invite_code;
+    let students_invite_code;
+
+    do {
+      students_invite_code = generateUniqueString();
+      studentsInviteData = await inviteCodeService.getDataByStudentInviteCode(
+        { students_invite_code },
+        context
+      );
+    } while (studentsInviteData.status !== 404);
+
+    do {
+      teachers_invite_code = generateUniqueString();
+      teacherInviteData = await inviteCodeService.getDataByTeacherInviteCode(
+        { teachers_invite_code },
+        context
+      );
+    } while (teacherInviteData.status !== 404);
 
     const inviteCodes = await inviteCodeService.createInviteCode({
       userId: user.id,

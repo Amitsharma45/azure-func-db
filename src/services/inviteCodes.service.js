@@ -133,11 +133,11 @@ const getInviteCodeByUserId = async (request) => {
 };
 
 const getDataByTeacherInviteCode = async (request) => {
-  const { teacher_invite_code } = request;
+  const { teachers_invite_code } = request;
 
   try {
     const inviteCode = await connection.invite_codes.findOne({
-      where: { teachers_invite_code: teacher_invite_code },
+      where: { teachers_invite_code },
     });
 
     if (!inviteCode) {
@@ -179,11 +179,11 @@ const getDataByTeacherInviteCode = async (request) => {
 };
 
 const getDataByStudentInviteCode = async (request) => {
-  const { student_invite_code } = request;
+  const { students_invite_code } = request;
 
   try {
     const inviteCode = await connection.invite_codes.findOne({
-      where: { students_invite_code: student_invite_code },
+      where: { students_invite_code },
     });
 
     if (!inviteCode) {

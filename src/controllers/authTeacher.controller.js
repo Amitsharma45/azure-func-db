@@ -311,8 +311,15 @@ const signupWithApple = async (request, context) => {
   try {
     // convert the request body to JSON
     const body = await request.json();
-    const { firstName, lastName, accessLevel, birthYear, userToken, nonce } =
-      body;
+    const {
+      firstName,
+      lastName,
+      accessLevel,
+      birthYear,
+      inviteCode,
+      userToken,
+      nonce,
+    } = body;
 
     if (!userToken || !nonce) {
       return (context.res = {
@@ -377,9 +384,90 @@ const signupWithApple = async (request, context) => {
           },
         });
       }
+
+      let communityId;
+      let isInvited = false;
+
+      if (inviteCode) {
+        if (accessLevel == "Student") {
+          const inviteCodes =
+            await inviteCodeService.getDataByStudentInviteCode(
+              { students_invite_code: inviteCode },
+              context
+            );
+          if (inviteCodes.status === 404) {
+            return inviteCodes;
+          }
+          communityId = inviteCodes.jsonBody.inviteCode.dataValues.community_id;
+        } else {
+          const inviteCodes =
+            await inviteCodeService.getDataByTeacherInviteCode(
+              { teachers_invite_code: inviteCode },
+              context
+            );
+
+          if (inviteCodes.status === 404) {
+            return inviteCodes;
+          }
+          communityId = inviteCodes.jsonBody.inviteCode.dataValues.community_id;
+        }
+      } else {
+        const invitedUser = await invitedUserService.getInvitedUserByEmail(
+          email
+        );
+
+        if (invitedUser.status !== 404) {
+          isInvited = true;
+          communityId =
+            invitedUser.jsonBody.invitedUser.dataValues.community_id;
+        }
+      }
+
       // creating a new user
       delete body.userToken;
       const user = await authService.signUp(body);
+
+      if (!inviteCode && !isInvited) {
+        const community = await communityService.createCommunity({
+          owner_id: user.id,
+        });
+        communityId = community.jsonBody.community.dataValues.id;
+      }
+
+      const communityMember = await communityMembersService.addCommunityMember(
+        {
+          member_id: user.id,
+          member_type: accessLevel,
+          community_id: communityId,
+        },
+        context
+      );
+
+      let teachers_invite_code;
+      let students_invite_code;
+
+      do {
+        students_invite_code = generateUniqueString();
+        studentsInviteData = await inviteCodeService.getDataByStudentInviteCode(
+          { students_invite_code },
+          context
+        );
+      } while (studentsInviteData.status !== 404);
+
+      do {
+        teachers_invite_code = generateUniqueString();
+        teacherInviteData = await inviteCodeService.getDataByTeacherInviteCode(
+          { teachers_invite_code },
+          context
+        );
+      } while (teacherInviteData.status !== 404);
+
+      const inviteCodes = await inviteCodeService.createInviteCode({
+        userId: user.id,
+        community_id: communityId,
+        teachers_invite_code,
+        students_invite_code,
+      });
 
       return (context.res = {
         status: 200,

@@ -45,6 +45,11 @@ const initializeConnection = async () => {
     Model
   );
   db.groups = require("../model/groups.model")(sequelize, DataTypes, Model);
+  db.group_members = require("../model/groupMembers.model")(
+    sequelize,
+    DataTypes,
+    Model
+  );
 
   return db;
 };

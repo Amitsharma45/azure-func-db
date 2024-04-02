@@ -47,8 +47,10 @@ const getInvitedUserById = async (request, context) => {
   try {
     const { id } = request.params;
 
-    const invitedUser = await connection.invited_users.findOne({
-      where: { id },
+    const invitedUser = await connection.invited_users.findAll({
+      where: {
+        invited_by: id,
+      },
     });
 
     if (!invitedUser) {

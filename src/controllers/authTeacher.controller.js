@@ -412,9 +412,9 @@ const signupWithApple = async (request, context) => {
           communityId = inviteCodes.jsonBody.inviteCode.dataValues.community_id;
         }
       } else {
-        const invitedUser = await invitedUserService.getInvitedUserByEmail(
-          email
-        );
+        const invitedUser = await invitedUserService.getInvitedUserByEmail({
+          email: body.email,
+        });
 
         if (invitedUser.status !== 404) {
           isInvited = true;

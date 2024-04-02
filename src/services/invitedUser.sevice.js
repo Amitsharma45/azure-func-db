@@ -216,7 +216,7 @@ const deleteInvitedUserById = async (request, context) => {
 };
 
 // Get a single invited user by email
-const getInvitedUserByEmail = async (email) => {
+const getInvitedUserByEmail = async ({ email }) => {
   try {
     const invitedUser = await connection.invited_users.findOne({
       where: { email },

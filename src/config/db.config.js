@@ -44,6 +44,7 @@ const initializeConnection = async () => {
     DataTypes,
     Model
   );
+  db.groups = require("../model/groups.model")(sequelize, DataTypes, Model);
 
   return db;
 };

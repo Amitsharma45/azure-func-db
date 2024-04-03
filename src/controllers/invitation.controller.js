@@ -10,9 +10,9 @@ const inviteUser = async (request, context) => {
     const { invited_by, email, name, invited_as, community_id } = body;
 
     // Check if the user has already been invited
-    const existingInvitedUser = await invitedUserService.getInvitedUserByEmail(
-      email
-    );
+    const existingInvitedUser = await invitedUserService.getInvitedUserByEmail({
+      email: email,
+    });
 
     if (existingInvitedUser.status === 200) {
       // User has already been invited, return appropriate response

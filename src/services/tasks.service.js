@@ -34,7 +34,6 @@ const addTask = async (request, context) => {
       },
     };
   } catch (error) {
-    console.log("Error: ", error);
     return {
       status: 500,
       jsonBody: {

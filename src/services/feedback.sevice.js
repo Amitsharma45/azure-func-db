@@ -22,7 +22,6 @@ const addFeedback = async (sender_id, receiver_id, feedback_note) => {
       },
     };
   } catch (error) {
-    console.log("Error: ", error);
     return {
       status: 500,
       jsonBody: {

@@ -57,6 +57,11 @@ const initializeConnection = async () => {
     Model
   );
   db.lessons = require("../model/lessons.model")(sequelize, DataTypes, Model);
+  db.lesson_notes = require("../model/lessonNotes.model")(
+    sequelize,
+    DataTypes,
+    Model
+  );
 
   return db;
 };

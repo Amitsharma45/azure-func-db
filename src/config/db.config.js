@@ -51,6 +51,11 @@ const initializeConnection = async () => {
     Model
   );
   db.tasks = require("../model/tasks.model")(sequelize, DataTypes, Model);
+  db.feedbacks = require("../model/feedback.model")(
+    sequelize,
+    DataTypes,
+    Model
+  );
 
   return db;
 };

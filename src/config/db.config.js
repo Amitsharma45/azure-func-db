@@ -50,6 +50,7 @@ const initializeConnection = async () => {
     DataTypes,
     Model
   );
+  db.tasks = require("../model/tasks.model")(sequelize, DataTypes, Model);
 
   return db;
 };

@@ -16,8 +16,14 @@ const removeCommunityMember = async (request, context) => {
   return await communityMemberService.removeCommunityMember(request, context);
 };
 
+const getCommunityMemberByMemberId = async (request, context) => {
+  const { memberId } = request.params;
+  return await communityMemberService.getCommunityMemberByMemberId(memberId);
+};
+
 module.exports = {
   addCommunityMember,
   getAllCommunityMembers,
   removeCommunityMember,
+  getCommunityMemberByMemberId,
 };

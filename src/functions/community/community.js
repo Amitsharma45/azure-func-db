@@ -57,3 +57,11 @@ app.http("removeCommunityMember", {
   route: "communityMembers/{community_id}/{member_id}",
   handler: communityMember.removeCommunityMember,
 });
+
+// Create Community Member endpoint
+app.http("getCommunityMemberById", {
+  methods: ["GET"],
+  authLevel: "anonymous",
+  route: "communityMembers/member/{memberId}",
+  handler: communityMember.getCommunityMemberByMemberId,
+});

@@ -145,9 +145,75 @@ const getAllTasksByTeacherId = async (request, context) => {
   }
 };
 
+// Get tasks by community ID and group ID
+const getTasksByCommunityAndGroupId = async (communityId, groupId) => {
+  try {
+    const tasks = await connection.tasks.findAll({
+      where: { community_id: communityId, group_id: groupId },
+    });
+
+    return {
+      status: 200,
+      jsonBody: {
+        status: 200,
+        message: "Tasks retrieved successfully",
+        tasks,
+      },
+      headers: {
+        "Content-Type": "application/json",
+      },
+    };
+  } catch (error) {
+    return {
+      status: 500,
+      jsonBody: {
+        status: 500,
+        message: "Internal Server Error",
+      },
+      headers: {
+        "Content-Type": "application/json",
+      },
+    };
+  }
+};
+
+// Get tasks by community ID and student ID
+const getTasksByCommunityAndStudentId = async (communityId, studentId) => {
+  try {
+    const tasks = await connection.tasks.findAll({
+      where: { community_id: communityId, student_id: studentId },
+    });
+
+    return {
+      status: 200,
+      jsonBody: {
+        status: 200,
+        message: "Tasks retrieved successfully",
+        tasks,
+      },
+      headers: {
+        "Content-Type": "application/json",
+      },
+    };
+  } catch (error) {
+    return {
+      status: 500,
+      jsonBody: {
+        status: 500,
+        message: "Internal Server Error",
+      },
+      headers: {
+        "Content-Type": "application/json",
+      },
+    };
+  }
+};
+
 module.exports = {
   addTask,
   getAllTasks,
   getAllTasksByTeacherId,
+  getTasksByCommunityAndGroupId,
+  getTasksByCommunityAndStudentId,
   removeTask,
 };

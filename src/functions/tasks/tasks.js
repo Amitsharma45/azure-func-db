@@ -24,3 +24,19 @@ app.http("removeTask", {
   route: "tasks/{id}",
   handler: taskController.removeTask,
 });
+
+// Get Tasks by Community ID and Group ID endpoint
+app.http("getTasksByCommunityAndGroupId", {
+  methods: ["GET"],
+  authLevel: "anonymous",
+  route: "tasks/community/{community_id}/group/{group_id}",
+  handler: taskController.getTasksByCommunityAndGroupId,
+});
+
+// Get Tasks by Community ID and Student ID endpoint
+app.http("getTasksByCommunityAndStudentId", {
+  methods: ["GET"],
+  authLevel: "anonymous",
+  route: "tasks/community/{community_id}/student/{student_id}",
+  handler: taskController.getTasksByCommunityAndStudentId,
+});

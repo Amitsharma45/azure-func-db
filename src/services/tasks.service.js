@@ -1,25 +1,26 @@
 const db = require("../config/db.config");
 const connection = db.getConnection();
 
-const DataTypes = require("sequelize/lib/data-types");
-
-DataTypes.DATE.prototype._stringify = function _stringify(date, options) {
-  date = this._applyTimezone(date, options);
-  return date.format("YYYY-MM-DD HH:mm:ss.SSS");
-};
-
 // Add a new task
 const addTask = async (request, context) => {
   try {
-    const { teacher_id, content, due_date } = request;
-
-    const formattedDueDate = new Date(due_date).toISOString();
+    const {
+      teacher_id,
+      student_id,
+      name,
+      description,
+      community_id,
+      group_id,
+    } = request;
 
     // Create the task
     const task = await connection.tasks.create({
       teacher_id,
-      content,
-      due_date: formattedDueDate,
+      student_id,
+      name,
+      description,
+      community_id,
+      group_id,
     });
 
     return {
@@ -110,6 +111,7 @@ const removeTask = async (request, context) => {
   }
 };
 
+// Get all tasks by teacher ID
 const getAllTasksByTeacherId = async (request, context) => {
   try {
     const { teacher_id } = request.params;

@@ -14,7 +14,7 @@ app.http("getAllTasks", {
   methods: ["GET"],
   authLevel: "anonymous",
   route: "tasks/{teacher_id}",
-  handler: taskController.getAllTasks,
+  handler: taskController.getAllTasksByTeacherId,
 });
 
 // Remove Task endpoint

@@ -7,15 +7,18 @@ const addTask = async (request, context) => {
   return await taskService.addTask(
     {
       teacher_id: body.teacher_id,
-      content: body.content,
-      due_date: body.due_date,
+      student_id: body.student_id,
+      name: body.name,
+      description: body.description,
+      community_id: body.community_id,
+      group_id: body.group_id,
     },
     context
   );
 };
 
 // Controller to get all tasks
-const getAllTasks = async (request, context) => {
+const getAllTasksByTeacherId = async (request, context) => {
   return await taskService.getAllTasksByTeacherId(request, context);
 };
 
@@ -26,6 +29,6 @@ const removeTask = async (request, context) => {
 
 module.exports = {
   addTask,
-  getAllTasks,
+  getAllTasksByTeacherId,
   removeTask,
 };

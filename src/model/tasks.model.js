@@ -4,37 +4,52 @@ module.exports = (sequelize, DataTypes, Model) => {
   Task.init(
     {
       id: {
-        allowNull: false,
-        autoIncrement: true,
-        primaryKey: true,
         type: DataTypes.INTEGER,
+        primaryKey: true,
+        autoIncrement: true,
       },
       teacher_id: {
         type: DataTypes.INTEGER,
         allowNull: false,
       },
-      content: {
-        type: DataTypes.TEXT,
+      student_id: {
+        type: DataTypes.INTEGER,
         allowNull: true,
       },
-      due_date: {
-        type: DataTypes.DATE,
-        allowNull: true,
+      name: {
+        type: DataTypes.TEXT,
+      },
+      description: {
+        type: DataTypes.TEXT,
       },
       createdAt: {
         type: DataTypes.DATE,
-        allowNull: false,
         defaultValue: sequelize.literal("CURRENT_TIMESTAMP"),
+        allowNull: false,
       },
       updatedAt: {
         type: DataTypes.DATE,
-        allowNull: false,
         defaultValue: sequelize.literal("CURRENT_TIMESTAMP"),
+        allowNull: false,
+      },
+      community_id: {
+        type: DataTypes.INTEGER,
+        references: {
+          model: "communities",
+          key: "id",
+        },
+      },
+      group_id: {
+        type: DataTypes.INTEGER,
+        references: {
+          model: "groups",
+          key: "id",
+        },
       },
     },
     {
       sequelize,
-      modelName: "tasks",
+      modelName: "Task",
       tableName: "tasks",
     }
   );

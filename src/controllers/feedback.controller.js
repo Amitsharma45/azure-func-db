@@ -2,11 +2,14 @@ const feedbackService = require("../services/feedback.sevice");
 
 // Controller to add feedback
 const addFeedback = async (request, context) => {
-  const { sender_id, receiver_id, feedback_note } = await request.json();
+  const { sender_id, receiver_id, feedback_note, community_id, group_id } =
+    await request.json();
   return await feedbackService.addFeedback(
     sender_id,
     receiver_id,
-    feedback_note
+    feedback_note,
+    community_id,
+    group_id
   );
 };
 

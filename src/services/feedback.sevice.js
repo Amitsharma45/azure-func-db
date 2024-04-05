@@ -1,13 +1,21 @@
 const db = require("../config/db.config");
 const connection = db.getConnection();
 
-const addFeedback = async (sender_id, receiver_id, feedback_note) => {
+const addFeedback = async (
+  sender_id,
+  receiver_id,
+  feedback_note,
+  community_id,
+  group_id
+) => {
   try {
     // Create the feedback
     const feedback = await connection.feedbacks.create({
       sender_id,
       receiver_id,
       feedback_note,
+      community_id,
+      group_id,
     });
 
     return {

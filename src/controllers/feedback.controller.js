@@ -25,6 +25,15 @@ const getFeedbackByReceiverId = async (request, context) => {
   return await feedbackService.getFeedbackByReceiverId(receiver_id);
 };
 
+// Controller to get feedbacks by community ID and group ID
+const getFeedbacksByCommunityIdAndGroupId = async (request, context) => {
+  const { community_id, group_id } = request.params;
+  return await feedbackService.getFeedbacksByCommunityIdAndGroupId(
+    community_id,
+    group_id
+  );
+};
+
 // Controller to remove feedback
 const removeFeedback = async (request, context) => {
   const { id } = request.params;
@@ -35,5 +44,6 @@ module.exports = {
   addFeedback,
   getFeedbackBySenderId,
   getFeedbackByReceiverId,
+  getFeedbacksByCommunityIdAndGroupId,
   removeFeedback,
 };

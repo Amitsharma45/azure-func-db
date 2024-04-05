@@ -32,3 +32,11 @@ app.http("removeFeedback", {
   route: "feedbacks/{id}",
   handler: feedbackController.removeFeedback,
 });
+
+// Get Feedbacks by Community ID and Group ID endpoint
+app.http("getFeedbacksByCommunityIdAndGroupId", {
+  methods: ["GET"],
+  authLevel: "anonymous",
+  route: "feedbacks/community/{community_id}/group/{group_id}",
+  handler: feedbackController.getFeedbacksByCommunityIdAndGroupId,
+});

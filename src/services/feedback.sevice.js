@@ -135,9 +135,41 @@ const removeFeedback = async (feedbackId) => {
   }
 };
 
+const getFeedbacksByCommunityIdAndGroupId = async (communityId, groupId) => {
+  try {
+    const feedbacks = await connection.feedbacks.findAll({
+      where: { community_id: communityId, group_id: groupId },
+    });
+
+    return {
+      status: 200,
+      jsonBody: {
+        status: 200,
+        message: "Feedbacks retrieved successfully",
+        feedbacks,
+      },
+      headers: {
+        "Content-Type": "application/json",
+      },
+    };
+  } catch (error) {
+    return {
+      status: 500,
+      jsonBody: {
+        status: 500,
+        message: "Internal Server Error",
+      },
+      headers: {
+        "Content-Type": "application/json",
+      },
+    };
+  }
+};
+
 module.exports = {
   addFeedback,
   getFeedbackBySenderId,
   getFeedbackByReceiverId,
+  getFeedbacksByCommunityIdAndGroupId,
   removeFeedback,
 };

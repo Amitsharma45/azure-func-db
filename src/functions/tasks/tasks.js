@@ -26,17 +26,17 @@ app.http("removeTask", {
 });
 
 // Get Tasks by Community ID and Group ID endpoint
-app.http("getTasksByCommunityAndGroupId", {
+app.http("getTasksByTeacherAndGroupId", {
   methods: ["GET"],
   authLevel: "anonymous",
-  route: "tasks/community/{community_id}/group/{group_id}",
-  handler: taskController.getTasksByCommunityAndGroupId,
+  route: "tasks/teacher/{teacher_id}/group/{group_id}",
+  handler: taskController.getTasksByTeacherAndGroupId,
 });
 
 // Get Tasks by Community ID and Student ID endpoint
-app.http("getTasksByCommunityAndStudentId", {
+app.http("getTasksByTeacherAndStudentId", {
   methods: ["GET"],
   authLevel: "anonymous",
-  route: "tasks/community/{community_id}/student/{student_id}",
-  handler: taskController.getTasksByCommunityAndStudentId,
+  route: "tasks/teacher/{teacher_id}/student/{student_id}",
+  handler: taskController.getTasksByTeacherAndStudentId,
 });

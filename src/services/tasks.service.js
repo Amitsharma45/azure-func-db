@@ -4,14 +4,7 @@ const connection = db.getConnection();
 // Add a new task
 const addTask = async (request, context) => {
   try {
-    const {
-      teacher_id,
-      student_id,
-      name,
-      description,
-      community_id,
-      group_id,
-    } = request;
+    const { teacher_id, student_id, name, description, group_id } = request;
 
     // Create the task
     const task = await connection.tasks.create({
@@ -19,7 +12,6 @@ const addTask = async (request, context) => {
       student_id,
       name,
       description,
-      community_id,
       group_id,
     });
 
@@ -146,10 +138,10 @@ const getAllTasksByTeacherId = async (request, context) => {
 };
 
 // Get tasks by community ID and group ID
-const getTasksByCommunityAndGroupId = async (communityId, groupId) => {
+const getTasksByTeacherAndGroupId = async (teacherId, groupId) => {
   try {
     const tasks = await connection.tasks.findAll({
-      where: { community_id: communityId, group_id: groupId },
+      where: { teacher_id: teacherId, group_id: groupId },
     });
 
     return {
@@ -178,10 +170,10 @@ const getTasksByCommunityAndGroupId = async (communityId, groupId) => {
 };
 
 // Get tasks by community ID and student ID
-const getTasksByCommunityAndStudentId = async (communityId, studentId) => {
+const getTasksByTeacherAndStudentId = async (teacherId, studentId) => {
   try {
     const tasks = await connection.tasks.findAll({
-      where: { community_id: communityId, student_id: studentId },
+      where: { teacher_id: teacherId, student_id: studentId },
     });
 
     return {
@@ -213,7 +205,7 @@ module.exports = {
   addTask,
   getAllTasks,
   getAllTasksByTeacherId,
-  getTasksByCommunityAndGroupId,
-  getTasksByCommunityAndStudentId,
+  getTasksByTeacherAndGroupId,
+  getTasksByTeacherAndStudentId,
   removeTask,
 };

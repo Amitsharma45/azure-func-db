@@ -1,5 +1,6 @@
 const db = require("../config/db.config");
 const connection = db.getConnection();
+const { Sequelize } = require("sequelize");
 
 // Add a user to a community
 const addCommunityMember = async (request, context) => {
@@ -42,11 +43,25 @@ const addCommunityMember = async (request, context) => {
 const getAllCommunityMembers = async (request, context) => {
   try {
     const { community_id } = request.params;
-
-    const communityMembers = await connection.community_members.findAll({
-      where: { community_id },
-    });
-
+    const communityMembers = await connection.sequelize.query(
+      `
+      SELECT
+            community_members.member_id,
+            community_members.member_type,
+            users.firstName,
+            users.lastName,
+            users.email,
+            users.birthYear
+      FROM community_members
+      LEFT JOIN users
+      ON community_members.member_id = users.id
+      WHERE community_members.community_id = :communityId;
+      `,
+      {
+        replacements: { communityId: community_id },
+        type: Sequelize.QueryTypes.SELECT,
+      }
+    );
     return {
       status: 200,
       jsonBody: {
@@ -59,11 +74,13 @@ const getAllCommunityMembers = async (request, context) => {
       },
     };
   } catch (error) {
+    console.log(error);
     return {
       status: 500,
       jsonBody: {
         status: 500,
         message: "Internal Server Error",
+        error,
       },
       headers: {
         "Content-Type": "application/json",

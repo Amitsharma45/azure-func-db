@@ -26,6 +26,14 @@ app.http("getLessonsByTeacherId", {
   handler: lessonController.getLessonsByTeacherId,
 });
 
+// Get Lessons by Teacher ID and Group ID endpoint
+app.http("getLessonsByTeacherIdAndGroupId", {
+  methods: ["GET"],
+  authLevel: "anonymous",
+  route: "lessons/teacher/{teacher_id}/group/{group_id}",
+  handler: lessonController.getLessonsByTeacherIdAndGroupId,
+});
+
 // Remove Lesson endpoint
 app.http("removeLesson", {
   methods: ["DELETE"],

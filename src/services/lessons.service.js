@@ -1,18 +1,40 @@
 const db = require("../config/db.config");
 const connection = db.getConnection();
 
+const DataTypes = require("sequelize/lib/data-types");
+
+DataTypes.DATE.prototype._stringify = function _stringify(date, options) {
+  date = this._applyTimezone(date, options);
+  return date.format("YYYY-MM-DD HH:mm:ss.SSS");
+};
+
 // Add a new lesson
 const addLesson = async (request, context) => {
   try {
     // Extract required fields from the request
-    const { teacher_id, lesson_date, lesson_name, status } = request;
+    const {
+      teacher_id,
+      student_id,
+      group_id,
+      lesson_name,
+      lesson_date,
+      lesson_mode,
+      recurring,
+      description,
+    } = request;
 
-    // Create the lesson
+    const formattedLessonDate = new Date(lesson_date).toISOString();
+
+    // Create the lesson using Sequelize model
     const lesson = await connection.lessons.create({
       teacher_id,
-      lesson_date,
+      student_id,
+      group_id,
       lesson_name,
-      status,
+      lesson_date: formattedLessonDate,
+      lesson_mode,
+      recurring,
+      description,
     });
 
     // Return success response
@@ -113,6 +135,44 @@ const getLessonsByTeacherId = async (request, context) => {
   }
 };
 
+// Get lessons by teacher ID and group ID
+const getLesssonsByTeacherIdandGroupId = async (request, context) => {
+  try {
+    // Extract teacher_id and group_id from the request parameters
+    const { teacher_id, group_id } = request;
+
+    // Find all lessons associated with the provided teacher_id and group_id
+    const lessons = await connection.lessons.findAll({
+      where: { teacher_id, group_id },
+    });
+
+    // Return success response with lessons data
+    return {
+      status: 200,
+      jsonBody: {
+        status: 200,
+        message: "Lessons retrieved successfully",
+        lessons,
+      },
+      headers: {
+        "Content-Type": "application/json",
+      },
+    };
+  } catch (error) {
+    // Return error response
+    return {
+      status: 500,
+      jsonBody: {
+        status: 500,
+        message: "Internal Server Error",
+      },
+      headers: {
+        "Content-Type": "application/json",
+      },
+    };
+  }
+};
+
 // Remove a lesson by ID
 const removeLesson = async (request, context) => {
   try {
@@ -155,5 +215,6 @@ module.exports = {
   addLesson,
   getAllLessons,
   getLessonsByTeacherId,
+  getLesssonsByTeacherIdandGroupId,
   removeLesson,
 };

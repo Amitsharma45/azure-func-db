@@ -13,16 +13,30 @@ module.exports = (sequelize, DataTypes, Model) => {
         type: DataTypes.INTEGER,
         allowNull: false,
       },
-      lesson_date: {
-        type: DataTypes.DATE,
-        allowNull: false,
+      student_id: {
+        type: DataTypes.INTEGER,
+      },
+      group_id: {
+        type: DataTypes.INTEGER,
       },
       lesson_name: {
         type: DataTypes.TEXT,
         allowNull: false,
       },
-      status: {
-        type: DataTypes.STRING(255),
+      lesson_date: {
+        type: DataTypes.DATE,
+        allowNull: false,
+      },
+      lesson_mode: {
+        type: DataTypes.TEXT,
+        allowNull: false,
+      },
+      recurring: {
+        type: DataTypes.TEXT,
+        allowNull: false,
+      },
+      description: {
+        type: DataTypes.TEXT,
         allowNull: false,
       },
       createdAt: {

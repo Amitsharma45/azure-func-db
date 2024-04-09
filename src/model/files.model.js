@@ -1,29 +1,33 @@
 module.exports = (sequelize, DataTypes, Model) => {
-  class LessonNote extends Model {}
+  class File extends Model {}
 
-  LessonNote.init(
+  File.init(
     {
       id: {
-        allowNull: false,
-        autoIncrement: true,
+        type: DataTypes.INTEGER,
         primaryKey: true,
-        type: DataTypes.INTEGER,
+        autoIncrement: true,
+        allowNull: false,
       },
-      lesson_id: {
+      uploaded_by: {
         type: DataTypes.INTEGER,
         allowNull: false,
-        references: {
-          model: "lessons",
-          key: "id",
-        },
       },
-      name: {
-        type: DataTypes.TEXT,
-        allowNull: true,
+      association_id: {
+        type: DataTypes.INTEGER,
+        allowNull: false,
       },
-      description: {
+      association_type: {
+        type: DataTypes.STRING(255),
+        allowNull: false,
+      },
+      title: {
         type: DataTypes.TEXT,
-        allowNull: true,
+        allowNull: false,
+      },
+      type: {
+        type: DataTypes.STRING(255),
+        allowNull: false,
       },
       createdAt: {
         type: DataTypes.DATE,
@@ -38,10 +42,10 @@ module.exports = (sequelize, DataTypes, Model) => {
     },
     {
       sequelize,
-      modelName: "lesson_notes",
-      tableName: "lesson_notes",
+      modelName: "files",
+      tableName: "files",
     }
   );
 
-  return LessonNote;
+  return File;
 };

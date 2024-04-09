@@ -62,6 +62,7 @@ const initializeConnection = async () => {
     DataTypes,
     Model
   );
+  db.files = require("../model/files.model")(sequelize, DataTypes, Model);
 
   return db;
 };

@@ -6,9 +6,8 @@ const addLessonNote = async (request, context) => {
 
   return await lessonNotesService.addLessonNote({
     lesson_id: body.lesson_id,
-    content: body.content,
-    multimedia_link: body.multimedia_link,
-    lesson_date: body.lesson_date,
+    name: body.name,
+    description: body.description,
   });
 };
 

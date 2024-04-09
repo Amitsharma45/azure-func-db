@@ -1,6 +1,6 @@
 const { EmailClient } = require("@azure/communication-email");
 
-const connectionString = process.env.AzureConnectionString;
+const connectionString = process.env.AzureCommunicationConnectionString;
 const client = new EmailClient(connectionString);
 
 const sendEmail = async (subject, plainText, to, context) => {

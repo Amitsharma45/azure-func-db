@@ -1,20 +1,40 @@
 const taskService = require("../services/tasks.service");
 
+const multer = require("multer");
+const uploadToBlobStorage = require("../config/uploadDoument");
+
+const inMemoryStorage = multer.memoryStorage();
+const uploadStrategy = multer({ storage: inMemoryStorage }).single("file");
+
 // Controller to add a task
 const addTask = async (request, context) => {
   const body = await request.json();
+  const response = await uploadToBlobStorage({ content: body.file });
 
-  return await taskService.addTask(
-    {
-      teacher_id: body.teacher_id,
-      student_id: body.student_id,
-      name: body.name,
-      description: body.description,
-      community_id: body.community_id,
-      group_id: body.group_id,
-    },
-    context
-  );
+  if (response.status === "success") {
+    return await taskService.addTask(
+      {
+        teacher_id: body.teacher_id,
+        student_id: body.student_id,
+        name: body.name,
+        description: body.description,
+        community_id: body.community_id,
+        group_id: body.group_id,
+      },
+      context
+    );
+  } else {
+    return {
+      status: 500,
+      jsonBody: {
+        status: 500,
+        message: "Internal Server Error",
+      },
+      headers: {
+        "Content-Type": "application/json",
+      },
+    };
+  }
 };
 
 // Controller to get all tasks
@@ -53,4 +73,5 @@ module.exports = {
   getTasksByCommunityAndGroupId,
   getTasksByCommunityAndStudentId,
   removeTask,
+  // addMedia,
 };

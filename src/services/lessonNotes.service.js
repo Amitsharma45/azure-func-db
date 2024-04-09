@@ -4,14 +4,13 @@ const connection = db.getConnection();
 // Add a new lesson note
 const addLessonNote = async (request, context) => {
   try {
-    const { lesson_id, content, multimedia_link, lesson_date } = request;
+    const { lesson_id, name, description } = request;
 
     // Create the lesson note
     const lessonNote = await connection.lesson_notes.create({
       lesson_id,
-      content,
-      multimedia_link,
-      lesson_date,
+      name,
+      description,
     });
 
     return {

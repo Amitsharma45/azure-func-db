@@ -2,13 +2,12 @@ const feedbackService = require("../services/feedback.sevice");
 
 // Controller to add feedback
 const addFeedback = async (request, context) => {
-  const { sender_id, receiver_id, feedback_note, community_id, group_id } =
+  const { sender_id, receiver_id, feedback_note, group_id } =
     await request.json();
   return await feedbackService.addFeedback(
     sender_id,
     receiver_id,
     feedback_note,
-    community_id,
     group_id
   );
 };
@@ -26,10 +25,10 @@ const getFeedbackByReceiverId = async (request, context) => {
 };
 
 // Controller to get feedbacks by community ID and group ID
-const getFeedbacksByCommunityIdAndGroupId = async (request, context) => {
-  const { community_id, group_id } = request.params;
-  return await feedbackService.getFeedbacksByCommunityIdAndGroupId(
-    community_id,
+const getFeedbacksByTeacherIdAndGroupId = async (request, context) => {
+  const { sender_id, group_id } = request.params;
+  return await feedbackService.getFeedbacksByTeacherIdAndGroupId(
+    sender_id,
     group_id
   );
 };
@@ -44,6 +43,6 @@ module.exports = {
   addFeedback,
   getFeedbackBySenderId,
   getFeedbackByReceiverId,
-  getFeedbacksByCommunityIdAndGroupId,
+  getFeedbacksByTeacherIdAndGroupId,
   removeFeedback,
 };

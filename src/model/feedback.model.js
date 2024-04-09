@@ -31,13 +31,6 @@ module.exports = (sequelize, DataTypes, Model) => {
         allowNull: false,
         defaultValue: sequelize.literal("CURRENT_TIMESTAMP"),
       },
-      community_id: {
-        type: DataTypes.INTEGER,
-        references: {
-          model: "communities",
-          key: "id",
-        },
-      },
       group_id: {
         type: DataTypes.INTEGER,
         references: {

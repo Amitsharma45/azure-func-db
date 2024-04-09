@@ -1,20 +1,13 @@
 const db = require("../config/db.config");
 const connection = db.getConnection();
 
-const addFeedback = async (
-  sender_id,
-  receiver_id,
-  feedback_note,
-  community_id,
-  group_id
-) => {
+const addFeedback = async (sender_id, receiver_id, feedback_note, group_id) => {
   try {
     // Create the feedback
     const feedback = await connection.feedbacks.create({
       sender_id,
       receiver_id,
       feedback_note,
-      community_id,
       group_id,
     });
 
@@ -135,10 +128,10 @@ const removeFeedback = async (feedbackId) => {
   }
 };
 
-const getFeedbacksByCommunityIdAndGroupId = async (communityId, groupId) => {
+const getFeedbacksByTeacherIdAndGroupId = async (senderId, groupId) => {
   try {
     const feedbacks = await connection.feedbacks.findAll({
-      where: { community_id: communityId, group_id: groupId },
+      where: { sender_id: senderId, group_id: groupId },
     });
 
     return {
@@ -170,6 +163,6 @@ module.exports = {
   addFeedback,
   getFeedbackBySenderId,
   getFeedbackByReceiverId,
-  getFeedbacksByCommunityIdAndGroupId,
+  getFeedbacksByTeacherIdAndGroupId,
   removeFeedback,
 };

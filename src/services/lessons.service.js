@@ -19,7 +19,7 @@ const addLesson = async (request, context) => {
       lesson_name,
       lesson_date,
       lesson_mode,
-      recurring,
+      repeatAt,
       description,
     } = request;
 
@@ -33,7 +33,7 @@ const addLesson = async (request, context) => {
       lesson_name,
       lesson_date: formattedLessonDate,
       lesson_mode,
-      recurring,
+      repeatAt,
       description,
     });
 

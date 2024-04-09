@@ -11,7 +11,7 @@ const addLesson = async (request, context) => {
       student_id: body.student_id,
       group_id: body.group_id,
       lesson_mode: body.lesson_mode,
-      recurring: body.recurring,
+      repeatAt: body.repeatAt,
       description: body.description,
       lesson_date: body.lesson_date,
       lesson_name: body.lesson_name,

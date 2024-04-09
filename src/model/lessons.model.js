@@ -31,7 +31,7 @@ module.exports = (sequelize, DataTypes, Model) => {
         type: DataTypes.TEXT,
         allowNull: false,
       },
-      recurring: {
+      repeatAt: {
         type: DataTypes.TEXT,
         allowNull: false,
       },

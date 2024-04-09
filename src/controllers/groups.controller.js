@@ -27,8 +27,18 @@ const removeGroup = async (request, context) => {
   return await groupService.removeGroup(request, context);
 };
 
+// Controller to get groups data by teacher_id and group_id
+const getGroupsDataByTeacherIdAndGroupId = async (request, context) => {
+  const { teacher_id, group_id } = request.params;
+  return await groupService.getGroupsDataByTeacherIdAndGroupId(
+    teacher_id,
+    group_id
+  );
+};
+
 module.exports = {
   addGroup,
   getAllGroups,
   removeGroup,
+  getGroupsDataByTeacherIdAndGroupId,
 };

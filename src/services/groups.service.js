@@ -103,8 +103,44 @@ const removeGroup = async (request, context) => {
   }
 };
 
+// Main function to get groups data by teacher_id and group_id
+const getGroupsDataByTeacherIdAndGroupId = async (teacher_id, group_id) => {
+  try {
+    const tasks = await connection.tasks.findAll({
+      where: { teacher_id, group_id },
+    });
+    const feedbacks = await connection.feedbacks.findAll({
+      where: { sender_id: teacher_id, group_id },
+    });
+    return {
+      status: 200,
+      jsonBody: {
+        status: 200,
+        message: "Group Data retrieved successfully",
+        tasks: tasks,
+        feedbacks: feedbacks,
+      },
+      headers: {
+        "Content-Type": "application/json",
+      },
+    };
+  } catch (error) {
+    return {
+      status: 500,
+      jsonBody: {
+        status: 500,
+        message: "Internal Server Error",
+      },
+      headers: {
+        "Content-Type": "application/json",
+      },
+    };
+  }
+};
+
 module.exports = {
   addGroup,
   getAllGroups,
   removeGroup,
+  getGroupsDataByTeacherIdAndGroupId,
 };

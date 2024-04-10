@@ -1,11 +1,7 @@
 const taskService = require("../services/tasks.service");
 const fileService = require("../services/files.service");
 
-const multer = require("multer");
 const uploadToBlobStorage = require("../config/uploadDoument");
-
-const inMemoryStorage = multer.memoryStorage();
-const uploadStrategy = multer({ storage: inMemoryStorage }).single("file");
 
 // Controller to add a task
 const addTask = async (request, context) => {
@@ -101,14 +97,14 @@ const removeTask = async (request, context) => {
   return await taskService.removeTask(request, context);
 };
 
-// Controller to get tasks by community ID and group ID
+// Controller to get tasks by Teacher ID and group ID
 const getTasksByTeacherAndGroupId = async (request, context) => {
   const { teacher_id, group_id } = request.params;
 
   return await taskService.getTasksByTeacherAndGroupId(teacher_id, group_id);
 };
 
-// Controller to get tasks by community ID and student ID
+// Controller to get tasks by Teacher ID and student ID
 const getTasksByTeacherAndStudentId = async (request, context) => {
   const { teacher_id, student_id } = request.params;
 

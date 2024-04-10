@@ -74,7 +74,6 @@ const getAllCommunityMembers = async (request, context) => {
       },
     };
   } catch (error) {
-    console.log(error);
     return {
       status: 500,
       jsonBody: {

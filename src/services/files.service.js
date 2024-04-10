@@ -4,15 +4,15 @@ const connection = db.getConnection();
 // Function to add a file
 const addFile = async (request, context) => {
   try {
-    const { uploaded_by, association_id, association_type, title, type } =
+    const { uploaded_by, association_id, association_type, type, url } =
       request;
 
     const file = await connection.files.create({
       uploaded_by,
       association_id,
       association_type,
-      title,
       type,
+      url,
     });
 
     return {

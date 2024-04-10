@@ -18,15 +18,15 @@ module.exports = (sequelize, DataTypes, Model) => {
         allowNull: false,
       },
       association_type: {
-        type: DataTypes.STRING(255),
+        type: DataTypes.STRING(DataTypes.MAX),
         allowNull: false,
       },
-      title: {
+      url: {
         type: DataTypes.TEXT,
         allowNull: false,
       },
       type: {
-        type: DataTypes.STRING(255),
+        type: DataTypes.STRING(DataTypes.MAX),
         allowNull: false,
       },
       createdAt: {

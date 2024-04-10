@@ -4,7 +4,7 @@ const communityMemberService = require("../services/communityMembers.service");
 // Controller to add a member to a group
 const addGroupMember = async (request, context) => {
   const body = await request.json();
-  const memberId = body.owner_id;
+  const memberId = body.user_id;
   const communityMember =
     await communityMemberService.getCommunityMemberByMemberId(memberId);
 

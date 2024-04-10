@@ -5,14 +5,14 @@ const addFile = async (request, context) => {
   try {
     const body = await request.json();
 
-    const { uploaded_by, association_id, association_type, title, type } = body;
+    const { uploaded_by, association_id, association_type, type, url } = body;
 
     return await fileService.addFile({
       uploaded_by,
       association_id,
       association_type,
-      title,
       type,
+      url,
     });
   } catch (error) {
     console.error("Error adding file:", error);

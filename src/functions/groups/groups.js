@@ -33,6 +33,13 @@ app.http("getGroupsDataByTeacherIdAndGroupId", {
   handler: group.getGroupsDataByTeacherIdAndGroupId,
 });
 
+// Add endpoint for getting groups data by teacher_id and group_id
+app.http("getGroupsDataByTeacherIdAndStudentId", {
+  methods: ["GET"],
+  authLevel: "anonymous",
+  route: "groups/teacher/{teacher_id}/student/{student_id}",
+  handler: group.getGroupsDataByTeacherIdAndStudentId,
+});
 // Remove Group endpoint
 app.http("removeGroup", {
   methods: ["DELETE"],

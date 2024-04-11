@@ -135,6 +135,57 @@ const getGroupsDataByTeacherIdAndGroupId = async (teacher_id, group_id) => {
   }
 };
 
+// Main function to get groups data by teacher_id and student_id
+const getGroupsDataByTeacherIdAndStudentId = async (teacher_id, student_id) => {
+  try {
+    const tasks = await connection.tasks.findAll({
+      where: { teacher_id, student_id },
+    });
+    const feedbacks = await connection.feedbacks.findAll({
+      where: { sender_id: teacher_id, receiver_id: student_id },
+    });
+    const lessons = await connection.lessons.findAll({
+      where: { teacher_id, student_id },
+    });
+
+    const lessonNotesMap = {};
+
+    for (const lesson of lessons) {
+      const lessonId = lesson.id;
+      const lessonNotes = await connection.lesson_notes.findAll({
+        where: { lesson_id: lessonId },
+      });
+      lessonNotesMap[lessonId] = lessonNotes;
+    }
+
+    return {
+      status: 200,
+      jsonBody: {
+        status: 200,
+        message: "Group Data retrieved successfully",
+        tasks: tasks,
+        feedbacks: feedbacks,
+        lessons: lessons,
+        lessonNotes: lessonNotesMap
+      },
+      headers: {
+        "Content-Type": "application/json",
+      },
+    };
+  } catch (error) {
+    return {
+      status: 500,
+      jsonBody: {
+        status: 500,
+        message: "Internal Server Error",
+      },
+      headers: {
+        "Content-Type": "application/json",
+      },
+    };
+  }
+};
+
 const changeGroupName = async (group_id, group_name) => {
   try {
     console.log({ group_id, group_name });
@@ -161,5 +212,6 @@ module.exports = {
   getAllGroups,
   removeGroup,
   getGroupsDataByTeacherIdAndGroupId,
+  getGroupsDataByTeacherIdAndStudentId,
   changeGroupName,
 };

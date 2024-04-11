@@ -71,6 +71,14 @@ const getGroupsDataByTeacherIdAndGroupId = async (request, context) => {
   );
 };
 
+// Controller to get groups data by teacher_id and group_id
+const getGroupsDataByTeacherIdAndStudentId = async (request, context) => {
+  const { teacher_id, student_id } = request.params;
+  return await groupService.getGroupsDataByTeacherIdAndStudentId(
+    teacher_id,
+    student_id
+  );
+};
 const changeGroupName = async (request, context) => {
   try {
 
@@ -108,5 +116,6 @@ module.exports = {
   getAllGroups,
   removeGroup,
   getGroupsDataByTeacherIdAndGroupId,
+  getGroupsDataByTeacherIdAndStudentId,
   changeGroupName,
 };

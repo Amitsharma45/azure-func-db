@@ -93,6 +93,20 @@ const getGroupsDataByTeacherIdAndGroupId = async (teacher_id, group_id) => {
     const feedbacks = await connection.feedbacks.findAll({
       where: { sender_id: teacher_id, group_id },
     });
+    const lessons = await connection.lessons.findAll({
+      where: { teacher_id, group_id },
+    });
+
+    const lessonNotesMap = {};
+
+    for (const lesson of lessons) {
+      const lessonId = lesson.id;
+      const lessonNotes = await connection.lesson_notes.findAll({
+        where: { lesson_id: lessonId },
+      });
+      lessonNotesMap[lessonId] = lessonNotes;
+    }
+
     return {
       status: 200,
       jsonBody: {
@@ -100,6 +114,8 @@ const getGroupsDataByTeacherIdAndGroupId = async (teacher_id, group_id) => {
         message: "Group Data retrieved successfully",
         tasks: tasks,
         feedbacks: feedbacks,
+        lessons: lessons,
+        lessonNotes: lessonNotesMap
       },
       headers: {
         "Content-Type": "application/json",

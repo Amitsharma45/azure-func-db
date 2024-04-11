@@ -1,20 +1,56 @@
 const groupService = require("../services/groups.service");
 const communityService = require("../services/community.service");
-
+const { addGroupMember } = require("../services/groupMembers.service");
 // Controller to add a group to a community
 const addGroup = async (request, context) => {
-  const body = await request.json();
+  try {
+    const body = await request.json();
+    const { user_id, group_name, members } = body;
 
-  const communityResponse = await communityService.getCommunityByOwnerId({
-    params: { ownerId: body.owner_id },
-  });
+    const communityResponse = await communityService.getCommunityByOwnerId({
+      params: { ownerId: body.user_id },
+    });
 
-  communityId = communityResponse.jsonBody.community.dataValues.id;
+    communityId = communityResponse.jsonBody.community.dataValues.id;
 
-  return await groupService.addGroup(
-    { group_name: body.group_name, community_id: communityId },
-    context
-  );
+    const groupData = await groupService.addGroup(
+      { group_name: group_name, community_id: communityId },
+      context
+    );
+    const group_id = groupData.id;
+
+
+    const memberData = [];
+    await members.forEach((member) => {
+      // await addGroupMember({ group_id, group_member_id: member.communityMemberId });
+      memberData.push({ group_id, group_member_id: member.communityMemberId });
+    });
+
+    const resp = await addGroupMember({ memberData });
+    
+    return {
+      status: 201,
+      jsonBody: {
+        status: 201,
+        message: "Group added successfully",
+        groupData,
+      },
+      headers: {
+        "Content-Type": "application/json",
+      },
+    };
+  } catch (error) {
+    return {
+      status: 500,
+      jsonBody: {
+        status: 500,
+        message: "Internal Server Error",
+      },
+      headers: {
+        "Content-Type": "application/json",
+      },
+    };
+  }
 };
 
 // Controller to get all groups of a community
@@ -36,9 +72,46 @@ const getGroupsDataByTeacherIdAndGroupId = async (request, context) => {
   );
 };
 
+const changeGroupName = async (request, context) => {
+  try {
+    const body = await request.json();
+    const { group_id, group_name } = body;
+
+    const groupData = await groupService.changeGroupName(
+      group_id,
+      group_name,
+    );
+
+    return {
+      status: 200,
+      jsonBody: {
+        status: 200,
+        message: "Group name changed successfully",
+        groupData,
+      },
+      headers: {
+        "Content-Type": "application/json",
+      },
+    };
+  } catch (error) {
+    return {
+      status: 500,
+      jsonBody: {
+        status: 500,
+        message: "Internal Server Error",
+      },
+      headers: {
+        "Content-Type": "application/json",
+      },
+    };
+  }
+
+}
+
 module.exports = {
   addGroup,
   getAllGroups,
   removeGroup,
   getGroupsDataByTeacherIdAndGroupId,
+  changeGroupName
 };

@@ -46,6 +46,7 @@ const getAllCommunityMembers = async (request, context) => {
     const communityMembers = await connection.sequelize.query(
       `
       SELECT
+            community_members.id AS communityMemberId,  
             community_members.member_id,
             community_members.member_type,
             users.firstName,

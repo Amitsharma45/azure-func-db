@@ -11,28 +11,9 @@ const addGroup = async (request, context) => {
       community_id,
     });
 
-    return {
-      status: 201,
-      jsonBody: {
-        status: 201,
-        message: "Group added successfully",
-        group,
-      },
-      headers: {
-        "Content-Type": "application/json",
-      },
-    };
+    return group;
   } catch (error) {
-    return {
-      status: 500,
-      jsonBody: {
-        status: 500,
-        message: "Internal Server Error",
-      },
-      headers: {
-        "Content-Type": "application/json",
-      },
-    };
+    throw new Error("Internal Server Error");
   }
 };
 
@@ -138,9 +119,30 @@ const getGroupsDataByTeacherIdAndGroupId = async (teacher_id, group_id) => {
   }
 };
 
+const changeGroupName = async ({ group_id, group_name }) => {
+  try {
+    const groupData = await connection.groups.update(
+      { group_name },
+      {
+        where: {
+          id: group_id,
+        },
+      }
+    );
+    console.log({ groupData })
+    return {
+      status: 200,
+      message: "Group name changed successfully",
+    };
+  } catch (error) {
+    throw new Error("Internal Server Error");
+  }
+};
+
 module.exports = {
   addGroup,
   getAllGroups,
   removeGroup,
   getGroupsDataByTeacherIdAndGroupId,
+  changeGroupName,
 };

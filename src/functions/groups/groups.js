@@ -18,6 +18,13 @@ app.http("getAllGroups", {
   handler: group.getAllGroups,
 });
 
+app.http("changeGroupName",{
+  methods: ["PUT"],
+  authLevel: "anonymous",
+  route: "group/changeName",
+  handler: group.changeGroupName,
+});
+
 // Add endpoint for getting groups data by teacher_id and group_id
 app.http("getGroupsDataByTeacherIdAndGroupId", {
   methods: ["GET"],
@@ -50,10 +57,26 @@ app.http("getAllGroupMembers", {
   handler: groupMembers.getAllGroupMembers,
 });
 
+// Get All Group Members endpoint
+app.http("getAllMembersNotInGroup", {
+  methods: ["POST"],
+  authLevel: "anonymous",
+  route: "groupMembers/notInGroup",
+  handler: groupMembers.getAllMembersNotInGroup,
+});
+
 // Remove Group Member endpoint
+// app.http("removeGroupMember", {
+//   methods: ["DELETE"],
+//   authLevel: "anonymous",
+//   route: "groupMembers/{group_id}/{member_id}",
+//   handler: groupMembers.removeGroupMember,
+// });
+
 app.http("removeGroupMember", {
   methods: ["DELETE"],
   authLevel: "anonymous",
-  route: "groupMembers/{group_id}/{member_id}",
+  route: "groupMembers/{member_id}",
   handler: groupMembers.removeGroupMember,
 });
+

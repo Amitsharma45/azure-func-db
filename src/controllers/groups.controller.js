@@ -19,7 +19,6 @@ const addGroup = async (request, context) => {
     );
     const group_id = groupData.id;
 
-
     const memberData = [];
     await members.forEach((member) => {
       // await addGroupMember({ group_id, group_member_id: member.communityMemberId });
@@ -27,7 +26,7 @@ const addGroup = async (request, context) => {
     });
 
     const resp = await addGroupMember({ memberData });
-    
+
     return {
       status: 201,
       jsonBody: {
@@ -74,20 +73,17 @@ const getGroupsDataByTeacherIdAndGroupId = async (request, context) => {
 
 const changeGroupName = async (request, context) => {
   try {
+
     const body = await request.json();
     const { group_id, group_name } = body;
-
-    const groupData = await groupService.changeGroupName(
-      group_id,
-      group_name,
-    );
+    
+    await groupService.changeGroupName(group_id, group_name);
 
     return {
       status: 200,
       jsonBody: {
         status: 200,
         message: "Group name changed successfully",
-        groupData,
       },
       headers: {
         "Content-Type": "application/json",
@@ -105,13 +101,12 @@ const changeGroupName = async (request, context) => {
       },
     };
   }
-
-}
+};
 
 module.exports = {
   addGroup,
   getAllGroups,
   removeGroup,
   getGroupsDataByTeacherIdAndGroupId,
-  changeGroupName
+  changeGroupName,
 };

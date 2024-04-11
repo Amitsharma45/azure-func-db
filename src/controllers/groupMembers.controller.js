@@ -3,10 +3,11 @@ const communityMemberService = require("../services/communityMembers.service");
 
 // Controller to add a member to a group
 const addGroupMember = async (request, context) => {
-  const body = await request.json();
-  const memberId = body.user_id;
-  const communityMember =
-    await communityMemberService.getCommunityMemberByMemberId(memberId);
+  try {
+    const body = await request.json();
+    const memberId = body.user_id;
+    const communityMember =
+      await communityMemberService.getCommunityMemberByMemberId(memberId);
 
     const { members, group_id } = body;
 
@@ -29,7 +30,7 @@ const addGroupMember = async (request, context) => {
     });
 
     const resp = await groupMemberService.addGroupMember({ memberData });
-    
+
     return {
       status: 201,
       jsonBody: {

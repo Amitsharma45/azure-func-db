@@ -119,8 +119,9 @@ const getGroupsDataByTeacherIdAndGroupId = async (teacher_id, group_id) => {
   }
 };
 
-const changeGroupName = async ({ group_id, group_name }) => {
+const changeGroupName = async (group_id, group_name) => {
   try {
+    console.log({ group_id, group_name });
     const groupData = await connection.groups.update(
       { group_name },
       {
@@ -129,7 +130,7 @@ const changeGroupName = async ({ group_id, group_name }) => {
         },
       }
     );
-    console.log({ groupData })
+    console.log({ groupData });
     return {
       status: 200,
       message: "Group name changed successfully",

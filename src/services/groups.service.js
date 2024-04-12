@@ -207,6 +207,52 @@ const changeGroupName = async (group_id, group_name) => {
   }
 };
 
+// Add a new function to get a group by its ID
+const getGroupById = async (group_id) => {
+  try {
+    const group = await connection.groups.findOne({
+      where: { id: group_id },
+    });
+
+    if (!group) {
+      return {
+        status: 404,
+        jsonBody: {
+          status: 404,
+          message: "Group not found",
+        },
+        headers: {
+          "Content-Type": "application/json",
+        },
+      };
+    }
+
+    return {
+      status: 200,
+      jsonBody: {
+        status: 200,
+        message: "Group retrieved successfully",
+        group,
+      },
+      headers: {
+        "Content-Type": "application/json",
+      },
+    };
+  } catch (error) {
+    return {
+      status: 500,
+      jsonBody: {
+        status: 500,
+        message: "Internal Server Error",
+      },
+      headers: {
+        "Content-Type": "application/json",
+      },
+    };
+  }
+};
+
+
 module.exports = {
   addGroup,
   getAllGroups,
@@ -214,4 +260,5 @@ module.exports = {
   getGroupsDataByTeacherIdAndGroupId,
   getGroupsDataByTeacherIdAndStudentId,
   changeGroupName,
+  getGroupById
 };

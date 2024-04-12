@@ -25,6 +25,14 @@ app.http("changeGroupName",{
   handler: group.changeGroupName,
 });
 
+// Get Group by ID endpoint
+app.http("getGroupById", {
+  methods: ["GET"],
+  authLevel: "anonymous",
+  route: "groups/group/{id}",
+  handler: group.getGroupById,
+});
+
 // Add endpoint for getting groups data by teacher_id and group_id
 app.http("getGroupsDataByTeacherIdAndGroupId", {
   methods: ["GET"],

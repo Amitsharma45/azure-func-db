@@ -111,6 +111,31 @@ const changeGroupName = async (request, context) => {
   }
 };
 
+// Controller to get a group by its ID
+const getGroupById = async (request, context) => {
+  try {
+    const { id } = request.params;
+    const groupData = await groupService.getGroupById(id);
+    
+    return {
+      status: groupData.status,
+      jsonBody: groupData.jsonBody,
+      headers: groupData.headers,
+    };
+  } catch (error) {
+    return {
+      status: 500,
+      jsonBody: {
+        status: 500,
+        message: "Internal Server Error",
+      },
+      headers: {
+        "Content-Type": "application/json",
+      },
+    };
+  }
+};
+
 module.exports = {
   addGroup,
   getAllGroups,
@@ -118,4 +143,5 @@ module.exports = {
   getGroupsDataByTeacherIdAndGroupId,
   getGroupsDataByTeacherIdAndStudentId,
   changeGroupName,
+  getGroupById
 };

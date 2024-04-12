@@ -65,3 +65,17 @@ app.http("getCommunityMemberById", {
   route: "communityMembers/member/{memberId}",
   handler: communityMember.getCommunityMemberByMemberId,
 });
+
+app.http('changeCommunityMemberType',{
+  methods: ["PUT"],
+  authLevel: "anonymous",
+  route: "changeCommunityMemberType/{memberId}",
+  handler: communityMember.changeCommunityMemberType,
+});
+
+
+app.http('getAllCommunityStudent',{
+  methods: ['GET'],
+  route: 'communityStudent/{community_id}',
+  handler: communityMember.getAllCommunityStudent
+})

@@ -21,9 +21,22 @@ const getCommunityMemberByMemberId = async (request, context) => {
   return await communityMemberService.getCommunityMemberByMemberId(memberId);
 };
 
+const getAllCommunityStudent = async (request, context) => {
+  const { community_id } = request.params;
+  return await communityMemberService.getAllCommunityStudent(community_id);
+}
+
+const changeCommunityMemberType = async (request, context) => {
+  const { memberId } = request.params;
+  const body = await request.json();
+  return await communityMemberService.changeCommunityMemberType(memberId, body);
+}
+
 module.exports = {
   addCommunityMember,
   getAllCommunityMembers,
   removeCommunityMember,
   getCommunityMemberByMemberId,
+  getAllCommunityStudent,
+  changeCommunityMemberType
 };

@@ -21,17 +21,61 @@ const addGroup = async (request, context) => {
 const getAllGroups = async (request, context) => {
   try {
     const { community_id } = request.params;
-
     const groups = await connection.groups.findAll({
       where: { community_id },
+      order: [["createdAt", "DESC"]]
     });
+
+    const updateData = [];
+    for (const group of groups) {
+      const latestTask = await connection.tasks.findAll({
+        where: { group_id: group.id },
+        order: [["createdAt", "DESC"]],
+        limit: 1
+      });
+      const latestFeedback = await connection.feedbacks.findAll({
+        where: { group_id: group.id },
+        order: [["createdAt", "DESC"]],
+        limit: 1
+      });
+      const latestLesson = await connection.lessons.findAll({
+        where: { group_id: group.id },
+        order: [["createdAt", "DESC"]],
+        limit: 1
+      });
+
+      const latestTaskDate =
+        latestTask.length > 0 ? new Date(latestTask[0].createdAt) : null;
+      const latestFeedbackDate =
+        latestFeedback.length > 0
+          ? new Date(latestFeedback[0].createdAt)
+          : null;
+      const latestLessonDate =
+        latestLesson.length > 0 ? new Date(latestLesson[0].createdAt) : null;
+
+      let latest ;
+      if (latestTaskDate && (!latest || latestTaskDate > latest)) {
+        latest = latestTask;
+      }
+      if (latestFeedbackDate && (!latest || latestFeedbackDate > latest)) {
+        latest = latestFeedback;
+      }
+      if (latestLessonDate && (!latest || latestLessonDate > latest)) {
+        latest = latestLesson;
+      }
+
+      updateData.push({
+        ...group.dataValues,
+        latest : (latest ? latest[0] : null)
+      });
+    }
 
     return {
       status: 200,
       jsonBody: {
         status: 200,
         message: "Groups retrieved successfully",
-        groups,
+        groups: updateData,
       },
       headers: {
         "Content-Type": "application/json",
@@ -43,6 +87,7 @@ const getAllGroups = async (request, context) => {
       jsonBody: {
         status: 500,
         message: "Internal Server Error",
+        error,
       },
       headers: {
         "Content-Type": "application/json",
@@ -115,7 +160,7 @@ const getGroupsDataByTeacherIdAndGroupId = async (teacher_id, group_id) => {
         tasks: tasks,
         feedbacks: feedbacks,
         lessons: lessons,
-        lessonNotes: lessonNotesMap
+        lessonNotes: lessonNotesMap,
       },
       headers: {
         "Content-Type": "application/json",
@@ -166,7 +211,7 @@ const getGroupsDataByTeacherIdAndStudentId = async (teacher_id, student_id) => {
         tasks: tasks,
         feedbacks: feedbacks,
         lessons: lessons,
-        lessonNotes: lessonNotesMap
+        lessonNotes: lessonNotesMap,
       },
       headers: {
         "Content-Type": "application/json",

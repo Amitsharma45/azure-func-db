@@ -115,7 +115,7 @@ const signUp = async (request, context) => {
     const communityMember = await communityMembersService.addCommunityMember(
       {
         member_id: user.id,
-        member_type: accessLevel,
+        member_type: "Admin",
         community_id: communityId,
       },
       context
@@ -439,7 +439,7 @@ const signupWithApple = async (request, context) => {
       const communityMember = await communityMembersService.addCommunityMember(
         {
           member_id: user.id,
-          member_type: accessLevel,
+          member_type: "Admin",
           community_id: communityId,
         },
         context
